@@ -1,13 +1,12 @@
 import java.util.Date;
-import java.util.Locale.Category;
-
+import java.time.* ; 
 public class TacheSimple extends Tache {
-    public TacheSimple(Category catégorie, Date deadline, Priorité priorité, int durée, String nom, int période) {
-        super(catégorie, deadline, priorité, durée, nom);
+    public TacheSimple(Catégorie catégorie, LocalDate deadlineDate, LocalTime deadlineHeure, Priorité priorité, int durée, String nom, int période) {
+        super(catégorie,deadlineDate,deadlineHeure,priorité,durée,nom);
         this.période = période;
     }
 
-    private int période;
+    private int période = 0;
 
     public int getPériode() {
         return période;
@@ -15,5 +14,10 @@ public class TacheSimple extends Tache {
 
     public void setPériode(int période) {
         this.période = période;
+    }
+
+    public void afficher(){
+        super.afficher();
+        System.out.println("Période: " + période);
     }
 }

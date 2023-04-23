@@ -1,11 +1,9 @@
-import java.util.ArrayList;
 import java.util.List;
 
 public class Projet {
     private String nom ;
     private String description;
     private List<Tache> listeTaches;
-
     public Projet(String nom, String description, List<Tache> listeTaches) {
         this.nom = nom;
         this.description = description;
