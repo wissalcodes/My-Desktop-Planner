@@ -1,7 +1,5 @@
-import java.util.Date;
-import java.util.Locale.Category;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.time.* ;
 
 public class TacheDécomposable extends Tache {
     private List<Tache> listeSousTaches;
@@ -11,8 +9,8 @@ public class TacheDécomposable extends Tache {
     public void setListeSousTaches(List<Tache> listeSousTaches) {
         this.listeSousTaches = listeSousTaches;
     }
-    public TacheDécomposable(Category catégorie, Date deadline, Priorité priorité, int durée, String nom, List<Tache> listeSousTaches) {
-        super(catégorie, deadline, priorité, durée, nom);
-        this.listeSousTaches = listeSousTaches;
-    }    
+    public TacheDécomposable(Catégorie catégorie, LocalDate deadlineDate, LocalTime deadlineHeure, Priorité priorité, int durée,String nom, List<Tache> listeSousTaches) {
+        super(catégorie,deadlineDate,deadlineHeure,priorité,durée,nom);
+        this.listeSousTaches = listeSousTaches ;
+    }
 }

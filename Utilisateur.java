@@ -1,5 +1,7 @@
 public class Utilisateur {
     private String pseudo;
+    private int nbMinTaches = 1 ; 
+    
     private Calendrier calendrierPerso;
 
     public Utilisateur(String pseudo, Calendrier calendrierPerso) {
@@ -22,5 +24,12 @@ public class Utilisateur {
 
     public void setCalendrierPerso(Calendrier calendrierPerso) {
         this.calendrierPerso = calendrierPerso;
+    }
+    public int getNbMinTaches() {
+        return nbMinTaches;
+    }
+
+    public void setNbMinTaches(int nbMinTaches) {
+        this.nbMinTaches = nbMinTaches;
     }
 }

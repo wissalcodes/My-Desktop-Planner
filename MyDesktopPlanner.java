@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.ArrayList;
 
 public class MyDesktopPlanner {
     private List<Utilisateur> listUtilisateurs;
@@ -13,7 +12,7 @@ public class MyDesktopPlanner {
         boolean trouv = false;
         int i = 0;
        while ( i < listUtilisateurs.size() && !trouv){
-        if (listUtilisateurs.get(i) != pseudo ){
+        if (listUtilisateurs.get(i).getPseudo() != pseudo ){
             i++;
         }
         else{
@@ -22,53 +21,30 @@ public class MyDesktopPlanner {
        }
        return trouv;
     }
-
-    public Utilisateur authentification(String pseudo, String motDePasse){
-        if (utilisateurInscrit(pseudo)==false){
-            System.out.println("\nErreur d'authentification: cet utilisateur n'est pas encore inscrit.");
-            return null;
-        }
-        else{
-            Client c = getClientByUsername(nomUtilisateur);
-            if (c.getCompte().getMotDePasse() == motDePasse){
-                System.out.println("\n>> Client connecté.");
-                return c;
+    public Utilisateur getUtilisateurParPseudo(String pseudo){
+            int i =0, trouv = 0 ;
+            while ( i < listUtilisateurs.size() && trouv == 0){
+                if (listUtilisateurs.get(i).getPseudo() != pseudo ){
+                    i++;
+                }
+                else{
+                    trouv = 1 ; 
+                }
             }
-            else{
-                System.out.println("\n>> Mot de passe incorrect.");
-                return null;
+            return (listUtilisateurs.get(i));
+    }
+    public Utilisateur authentification(String pseudo){
+        try{
+            if (utilisateurInscrit(pseudo)== false){
+                throw new UtilisateurIntrouvableException() ;
+            }
+            else {
+                return (getUtilisateurParPseudo(pseudo));
             }
         }
-    }
-    public boolean estClient(Client client){
-        boolean trouv = false;
-        int i = 0;
-       while ( i < listeClients.length && !trouv){
-        if ((listeClients[i].getPrenom() != client.getPrenom()) | (listeClients[i].getNom() != client.getNom())){
-            i++;
-        }
-        else{
-            return true;
-        }
-       }
-       return trouv;
-    }
-    public boolean nomUtilisateurPris(Client client){
-        boolean trouv = false;
-        int i = 0;
-       while ( i < listeClients.length && !trouv){
-        if (listeClients[i].getCompte().getNomUtilisateur() != client.getCompte().getNomUtilisateur()){
-            i++;
-        }
-        else{
-            return true;
-        }
-       }
-       return trouv;
-    }
-    public void consultClients(){
-        for( int i = 0 ; i < listeClients.length ; i++){
-            listeClients[i].clientInfo();
+        catch(UtilisateurIntrouvableException e){
+            System.out.println("Ce pseudo ne correspond à aucun utilisateur.");
+            return(null);
         }
     }
 }
