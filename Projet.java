@@ -27,5 +27,9 @@ public class Projet {
     public void setListeTaches(List<Tache> listeTaches) {
         this.listeTaches = listeTaches;
     }
+    @Override
+    public String toString() {
+        return "Projet [nom=" + nom + ", description=" + description + ", listeTaches=" + listeTaches + "]";
+    }
 
 }

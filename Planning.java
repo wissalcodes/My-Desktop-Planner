@@ -27,4 +27,9 @@ public class Planning {
     public void setJournéesPlanifiées(List<Journée> journéesPlanifiées) {
         this.journéesPlanifiées = journéesPlanifiées;
     }
+    @Override
+    public String toString() {
+        return "Planning [dateDébut=" + dateDébut + ", dateFin=" + dateFin + ", journéesPlanifiées="
+                + journéesPlanifiées + "]";
+    }
 }

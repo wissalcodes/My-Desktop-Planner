@@ -1,41 +1,43 @@
-import java.util.List;
+import java.util.*;
 
 public class MyDesktopPlanner {
-    private List<Utilisateur> listUtilisateurs;
-    public List<Utilisateur> getListUtilisateurs() {
+    private Set<Utilisateur> listUtilisateurs = new HashSet<>();
+    @Override
+    public String toString() {
+        return "MyDesktopPlanner [listUtilisateurs=" + listUtilisateurs + "]";
+    }
+    public Set<Utilisateur> getListUtilisateurs() {
         return listUtilisateurs;
     }
-    public void setListUtilisateurs(List<Utilisateur> listUtilisateurs) {
+    public void setListUtilisateurs(Set<Utilisateur> listUtilisateurs) {
         this.listUtilisateurs = listUtilisateurs;
     }
-    public boolean utilisateurInscrit(String pseudo){
-        boolean trouv = false;
-        int i = 0;
-       while ( i < listUtilisateurs.size() && !trouv){
-        if (listUtilisateurs.get(i).getPseudo() != pseudo ){
-            i++;
+
+   public boolean rechercheUtilisateur(String pseudo){  //recherche un utilisateur dans la liste des utilisateurs et retourne vrai s'il est inscrit
+     boolean trouv = false;
+     
+     for (Iterator<Utilisateur> iterator = listUtilisateurs.iterator(); iterator.hasNext();){
+        Utilisateur u = (Utilisateur) iterator.next();
+        if (u.getPseudo() == pseudo){
+            trouv = true;
         }
-        else{
-            return true;
-        }
-       }
-       return trouv;
+     }
+    return trouv;
+   }
+    public void ajouterUtilisateur(Utilisateur utilisateur){
+        listUtilisateurs.add(utilisateur);
     }
-    public Utilisateur getUtilisateurParPseudo(String pseudo){
-            int i =0, trouv = 0 ;
-            while ( i < listUtilisateurs.size() && trouv == 0){
-                if (listUtilisateurs.get(i).getPseudo() != pseudo ){
-                    i++;
-                }
-                else{
-                    trouv = 1 ; 
-                }
+    public Utilisateur getUtilisateurParPseudo(String pseudo) {
+        for (Utilisateur u : listUtilisateurs) {
+            if (u.getPseudo().equals(pseudo)) {
+                return u;
             }
-            return (listUtilisateurs.get(i));
+        }
+        return null; // no matching Utilisateur found
     }
     public Utilisateur authentification(String pseudo){
         try{
-            if (utilisateurInscrit(pseudo)== false){
+            if (listUtilisateurs.contains(getUtilisateurParPseudo(pseudo))== false){
                 throw new UtilisateurIntrouvableException() ;
             }
             else {
@@ -47,4 +49,5 @@ public class MyDesktopPlanner {
             return(null);
         }
     }
+    
 }
