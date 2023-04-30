@@ -1,5 +1,10 @@
 import java.time.*;
 public class Tache {
+    @Override
+    public String toString() {
+        return "Tache [catégorie=" + catégorie + ", deadlineDate=" + deadlineDate + ", deadlineHeure=" + deadlineHeure
+                + ", priorité=" + priorité + ", durée=" + durée + ", nom=" + nom + ", etat=" + etat + "]";
+    }
     public Tache(Catégorie catégorie, LocalDate deadlineDate, LocalTime deadlineHeure, Priorité priorité, int durée,
             String nom) {
         this.catégorie = catégorie;
