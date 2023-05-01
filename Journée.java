@@ -4,7 +4,7 @@ public class Journée implements Comparable<Journée> {
     public Journée(LocalDate date) {
         this.date = date;
     }
-    private LocalDate date; //Date de la journée sous le format jj/mm/aaaa
+    private LocalDate date; //Date de la journée sous le format aaaa-mm-jj
     private Set<CreneauTache> listCreneauxTaches = new HashSet<>();  //Les couples créneaux taches sont uniques, il ne peut pas y'avoir le meme couple. c'est plus utile quand on aura de remplacer le couple.
     private Badge badgeJournalier;
     private int nbTachesPrévues ;
@@ -48,10 +48,11 @@ public class Journée implements Comparable<Journée> {
     }
     @Override
     public String toString() {
-        return "Journée [date=" + date + "]";
+        return "\nJournée [date=" + date + "\n Créneaux libres= "+ listCreneauxLibres;
     }
     @Override
     public int compareTo(Journée o) {
         return this.date.compareTo(o.date);
     }
+    
 }
