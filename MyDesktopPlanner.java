@@ -83,11 +83,11 @@ public class MyDesktopPlanner {
         }
     }  
     public void planifier(){
-        Planning planning = utilisateurAuthentifié.fixerPériodePlanning();
-        utilisateurAuthentifié.fixerCréneauxLibres(planning);
-        utilisateurAuthentifié.getCalendrierPerso().journéesCalendrier.addAll(planning.getJournéesPlanifiées());
+      
+        System.out.println("Choisissez une option:\n1. Planification manuelle d'une tache\n2. Planification d'un ensemble de taches\n");
         Scanner scanner1 = new Scanner(System.in);
-        System.out.println("Choisissez une option:\n1. Planification manuelle d'une tache\n2. Planification d'un ensemble de taches");
+       
+        //dans la planification d'un ensemble de taches, on a automatique et manuel.
         int option = Integer.parseInt(scanner1.nextLine());
         if (option == 1){
             Scanner scanner = new Scanner(System.in);
@@ -112,11 +112,27 @@ public class MyDesktopPlanner {
             System.out.println("Entrez la catégorie de la tache (PERSONNELLE, PROFESSIONNELLE, ou AUTRE):");
             String categorieTache = scanner.nextLine();
             Catégorie categorie = new Catégorie(categorieTache,new Color(0,0,0));
-            Tache tache = new Tache(categorie, dateLimite, heureLimite, priorite, dureeTache, nomTache);
+            TacheSimple tache = new TacheSimple(categorie, dateLimite, heureLimite, priorite, dureeTache, nomTache,0);
             System.out.println(tache);
-            //utilisateur.calendrierPerso.getJournéeByDate(tacheDate).planifierTacheManuelle(dateLimite, creneau, tache);
+            //demander le créneau:
+            System.out.println("Introduisez la journée yyyy-mm-dd: ");
+            String dateTacheString = scanner.nextLine();
+            LocalDate dateTache = LocalDate.parse(dateTacheString);
+            System.out.println("Introduisez le créneau souhaité: HH:mm-HH:mm");
+            String creneauString = scanner.nextLine();
+            String[] creneauTimes = creneauString.split("-");
+            LocalTime heureDebut = LocalTime.parse(creneauTimes[0]);
+            LocalTime heureFin = LocalTime.parse(creneauTimes[1]);
+            if (heureDebut.isAfter(heureFin)) {
+                throw new IllegalArgumentException("L'heure de début ne peut pas être après l'heure de fin.");
+            }
+            Creneau creneau = new Creneau(heureDebut, heureFin);
+            utilisateurAuthentifié.planifierTacheManuelle(dateTache, creneau, tache);
         }
         if (option == 2){
+            Planning planning = utilisateurAuthentifié.fixerPériodePlanning();
+            utilisateurAuthentifié.fixerCréneauxLibres(planning);
+            utilisateurAuthentifié.getCalendrierPerso().journéesCalendrier.addAll(planning.getJournéesPlanifiées());
             //proposition du système.
         }
     }  

@@ -20,7 +20,6 @@ public class Calendrier {
     public String toString() {
         return "\n\t\t\t\t\t***Calendrier***\n" + journéesCalendrier;
     }
-
     LocalDate currentDate = LocalDate.now();
     int currentMonth = currentDate.getMonthValue();
     int currentYear = currentDate.getYear();
@@ -30,7 +29,7 @@ public class Calendrier {
         int day = 1;
         int month = currentMonth;
         int year = currentYear;
-        List<Journée> sortedJournées = new ArrayList<>();
+        TreeSet<Journée> sortedJournées = new TreeSet<>();
         while (month <= currentMonth + 1) {
             LocalDate date = LocalDate.of(year, month, day);
             sortedJournées.add(new Journée(date));
@@ -41,6 +40,7 @@ public class Calendrier {
                 day++;
             }
         }
+        journéesCalendrier = sortedJournées;
     }
 
     public Journée getJournéeByDate(LocalDate date) {

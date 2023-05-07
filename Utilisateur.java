@@ -1,5 +1,6 @@
 import java.util.*;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 public class Utilisateur {
     private String pseudo;
     private int nbMinTaches = 1 ; 
@@ -135,10 +136,10 @@ public class Utilisateur {
             String[] slots = input.split(",");
             for (String slot : slots) {
                 String[] times = slot.split("-");
-                int heureDebut = Integer.parseInt(times[0]);
-                int heureFin = Integer.parseInt(times[1]);
-                Creneau creneau = new Creneau(LocalTime.of(heureDebut, 0), LocalTime.of(heureFin, 0));
-                for (Journée journee : planning.getJournéesPlanifiées()) {
+                LocalTime heureDebut = LocalTime.parse(times[0], DateTimeFormatter.ofPattern("HH:mm:ss"));
+                LocalTime heureFin = LocalTime.parse(times[1], DateTimeFormatter.ofPattern("HH:mm:ss"));
+                Creneau creneau = new Creneau(heureDebut, heureFin);   
+                 for (Journée journee : planning.getJournéesPlanifiées()) {
                     journee.getListCreneauxLibres().add(creneau);
                 }
             }
@@ -149,10 +150,9 @@ public class Utilisateur {
                 String[] slots = input.split(",");
                 for (String slot : slots) {
                     String[] times = slot.split("-");
-                    int heureDebut = Integer.parseInt(times[0]);
-                    int heureFin = Integer.parseInt(times[1]);
-                    Creneau creneau = new Creneau(LocalTime.of(heureDebut, 0), LocalTime.of(heureFin, 0));
-                    journee.getListCreneauxLibres().add(creneau);
+                    LocalTime heureDebut = LocalTime.parse(times[0], DateTimeFormatter.ofPattern("HH:mm:ss"));
+                    LocalTime heureFin = LocalTime.parse(times[1], DateTimeFormatter.ofPattern("HH:mm:ss"));
+                    Creneau creneau = new Creneau(heureDebut, heureFin);                  journee.getListCreneauxLibres().add(creneau);
                 }
             }
         } else {
@@ -160,16 +160,32 @@ public class Utilisateur {
         }
         return planning;
     }
-    public Journée planifierTacheManuelle(LocalDate tacheDate, Creneau creneau, Tache tache){
+    public Journée planifierTacheManuelle(LocalDate tacheDate, Creneau creneau, TacheSimple tache){
         Journée journée = calendrierPerso.getJournéeByDate(tacheDate);
-        Iterator iterator = journée.getListCreneauxLibres().iterator();
-        while(iterator.hasNext()){
-            Creneau creneau2 = (Creneau) iterator.next();
-            if (creneau2.contientCreneau(creneau)){
-              Set<Creneau> resultatDécompositionCreneau =  creneau2.decompositionCreneau(creneau);
-            }
+       //cas 1 : ce créneau ne figure pas dans les créneaux libres ni dans les créneax déjas occupés par des taches.
+        //c'est le cas trvial, on crée le couple CreneauTache et on l'ajoute à la liste des creaneauTaches de la journée
+        if (journée.getListCreneauxLibres().contains(creneau)==false){
+           System.out.println("Souhaitez vous bloquer ce créneau pour cette tache?"); //le créneau ne sera pas touchée lors de la replanification
+            
+           CreneauTache creneauTache = new CreneauTache(creneau, tache);
+            journée.getListCreneauxTaches().add(creneauTache);
         }
 
+        else{
+            //2 cas
+            // si la tache est programmée dans un créneau qui était libre, il ne devient plus libre (du moins la partie qui était libre)
+            Iterator iterator = journée.getListCreneauxLibres().iterator();
+            while(iterator.hasNext()){
+                Creneau creneau2 = (Creneau) iterator.next();
+                if (creneau2.contientCreneau(creneau)){
+                  Set<Creneau> resultatDécompositionCreneau =  creneau2.decompositionCreneau(creneau);
+                }
+    
+            }
+        }
+        calendrierPerso.journéesCalendrier.add(journée);
+        System.out.println("Calendrier apres planification manuelle d'une tache");
+        System.out.println(calendrierPerso);
         return(journée);
     }
 
@@ -180,5 +196,6 @@ public class Utilisateur {
                 + historiqueProjets + ", calendrierPerso=" + calendrierPerso + ", listCatégories=" + listCatégories
                 + "]";
     }
+    //Dans le cas de la replanification, ou bien si on essaie de programmer un
 
 }

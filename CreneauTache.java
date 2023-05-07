@@ -13,6 +13,7 @@ public class CreneauTache {
         this.creneau = creneau;
         this.tache = tache;
     }
+    
     public boolean isEstBloqué() {
         return estBloqué;
     }

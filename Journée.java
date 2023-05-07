@@ -48,7 +48,7 @@ public class Journée implements Comparable<Journée> {
     }
     @Override
     public String toString() {
-        return "\nJournée [date=" + date + "\n Créneaux libres= "+ listCreneauxLibres;
+        return  date + " - Créneaux libres :  "+ listCreneauxLibres + "\n (Creneau-Tache)" + listCreneauxTaches;
     }
     @Override
     public int compareTo(Journée o) {

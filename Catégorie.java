@@ -17,5 +17,9 @@ public Color getCouleur() {
 }
 public void setCouleur(Color couleur) {
     this.couleur = couleur;
+}
+@Override
+public String toString() {
+    return "Catégorie [categorie=" + categorie + ", couleur=" + couleur + "]";
 } 
 }
