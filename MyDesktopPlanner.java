@@ -1,8 +1,11 @@
 import java.util.*;
+import java.awt.Color;
+import org.w3c.dom.css.RGBColor;
+
 import java.time.* ;
 
 public class MyDesktopPlanner {
-    private Utilisateur utilisateurAuthentifié = new Utilisateur("",new Calendrier());
+    protected Utilisateur utilisateurAuthentifié = new Utilisateur("",new Calendrier());
     public Utilisateur getUtilisateurAuthentifié() {
         return utilisateurAuthentifié;
     }
@@ -32,9 +35,26 @@ public class MyDesktopPlanner {
      }
     return trouv;
    }
-    public void ajouterUtilisateur(Utilisateur utilisateur){
-        listUtilisateurs.add(utilisateur);
-    }
+   public void ajouterUtilisateur(Utilisateur utilisateur){
+    System.out.println("Utilisateur créé avec succès.\nIntroduisez les catégories souhaitées, suivies de leur couleur (au format RGB séparé par des virgules). Tapez 'stop' pour arrêter la saisie.");
+    Scanner scanner = new Scanner(System.in);
+    String categorieNom;
+    do {
+        System.out.print("Nom de la catégorie : ");
+        categorieNom = scanner.nextLine();
+        if (!categorieNom.equalsIgnoreCase("stop")) {
+            System.out.print("Couleur de la catégorie (au format RGB séparé par des virgules) : ");
+            String[] rgbString = scanner.nextLine().split(",");
+            int r = Integer.parseInt(rgbString[0].trim());
+            int g = Integer.parseInt(rgbString[1].trim());
+            int b = Integer.parseInt(rgbString[2].trim());
+            Color couleur = new Color(r, g, b);
+            Catégorie categorie = new Catégorie(categorieNom, couleur);
+            utilisateur.listeCatégories.add(categorie);
+        }
+    } while (!categorieNom.equalsIgnoreCase("stop"));
+    listUtilisateurs.add(utilisateur);
+}
     public Utilisateur getUtilisateurParPseudo(String pseudo) {
         for (Utilisateur u : listUtilisateurs) {
             if (u.getPseudo().equals(pseudo)) {
@@ -66,6 +86,38 @@ public class MyDesktopPlanner {
         Planning planning = utilisateurAuthentifié.fixerPériodePlanning();
         utilisateurAuthentifié.fixerCréneauxLibres(planning);
         utilisateurAuthentifié.getCalendrierPerso().journéesCalendrier.addAll(planning.getJournéesPlanifiées());
-        System.out.println(utilisateurAuthentifié);
+        Scanner scanner1 = new Scanner(System.in);
+        System.out.println("Choisissez une option:\n1. Planification manuelle d'une tache\n2. Planification d'un ensemble de taches");
+        int option = Integer.parseInt(scanner1.nextLine());
+        if (option == 1){
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Entrez le nom de la tache:");
+            String nomTache = scanner.nextLine();
+            
+            System.out.println("Entrez la durée de la tache (en minutes):");
+            int dureeTache = Integer.parseInt(scanner.nextLine());
+            
+            System.out.println("Entrez la priorité de la tache (HIGH, MEDIUM, ou LOW):");
+            String prioriteTache = scanner.nextLine();
+            Priorité priorite = Priorité.valueOf(prioriteTache);
+            
+            System.out.println("Entrez la date limite de la tache (format: aaaa-mm-jj):");
+            String dateLimiteString = scanner.nextLine();
+            LocalDate dateLimite = LocalDate.parse(dateLimiteString);
+            
+            System.out.println("Entrez l'heure limite de la tache (format: hh:mm:ss):");
+            String heureLimiteString = scanner.nextLine();
+            LocalTime heureLimite = LocalTime.parse(heureLimiteString);
+            
+            System.out.println("Entrez la catégorie de la tache (PERSONNELLE, PROFESSIONNELLE, ou AUTRE):");
+            String categorieTache = scanner.nextLine();
+            Catégorie categorie = new Catégorie(categorieTache,new Color(0,0,0));
+            Tache tache = new Tache(categorie, dateLimite, heureLimite, priorite, dureeTache, nomTache);
+            System.out.println(tache);
+            //utilisateur.calendrierPerso.getJournéeByDate(tacheDate).planifierTacheManuelle(dateLimite, creneau, tache);
+        }
+        if (option == 2){
+            //proposition du système.
+        }
     }  
 }

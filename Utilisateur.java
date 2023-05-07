@@ -4,15 +4,24 @@ public class Utilisateur {
     private String pseudo;
     private int nbMinTaches = 1 ; 
     private List<Planning> historiquePlannings; 
+    protected Set<Catégorie> listeCatégories = new HashSet<>();
+    public Set<Catégorie> getListeCatégories() {
+        return listeCatégories;
+    }
+
+    public void setListeCatégories(Set<Catégorie> listeCatégories) {
+        this.listeCatégories = listeCatégories;
+    }
+
     public List<Planning> getHistoriquePlannings() {
         return historiquePlannings;
     }
-
+    
     public void setHistoriquePlannings(List<Planning> historiquePlannings) {
         this.historiquePlannings = historiquePlannings;
     }
 
-    private List<Projet> hitoriqueProjets;  
+    private List<Projet> historiqueProjets;  
     private Calendrier calendrierPerso;
     private List<Catégorie> listCatégories ; 
 
@@ -46,11 +55,11 @@ public class Utilisateur {
     }
 
     public List<Projet> getHitoriqueProjets() {
-        return hitoriqueProjets;
+        return historiqueProjets;
     }
 
     public void setHitoriqueProjets(List<Projet> hitoriqueProjets) {
-        this.hitoriqueProjets = hitoriqueProjets;
+        this.historiqueProjets = hitoriqueProjets;
     }
 
     public List<Catégorie> getListCatégories() {
@@ -86,12 +95,7 @@ public class Utilisateur {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Utilisateur [pseudo=" + pseudo + ", nbMinTaches=" + nbMinTaches + ", historiquePlannings="
-                + historiquePlannings + ", hitoriqueProjets=" + hitoriqueProjets + ", calendrierPerso="
-                + calendrierPerso + ", listCatégories=" + listCatégories + "]";
-    }
+    
     
     public Planning fixerPériodePlanning() {
         Scanner scanner = new Scanner(System.in);
@@ -122,17 +126,37 @@ public class Utilisateur {
     }
     public Planning fixerCréneauxLibres(Planning planning) {
         Scanner scanner = new Scanner(System.in);
-        for (Journée journée : planning.getJournéesPlanifiées()) {
-            System.out.println("Les créneaux libres pour la journée: " + journée.getDate() + ", sous le format HH-HH,HH-HH");
+        System.out.println("Choisissez une option:\n1. Définir des créneaux libres constants pour tout le planning.\n2. Définir des créneaux libres personnalisés par journée");
+        int option = Integer.parseInt(scanner.nextLine());
+    
+        if (option == 1) {
+            System.out.println("Les créneaux libres pour tout le planning, sous le format HH-HH,HH-HH");
             String input = scanner.nextLine();
             String[] slots = input.split(",");
-                for (String slot : slots) {
+            for (String slot : slots) {
                 String[] times = slot.split("-");
-                int heureDébut = Integer.parseInt(times[0]);
+                int heureDebut = Integer.parseInt(times[0]);
                 int heureFin = Integer.parseInt(times[1]);
-                Creneau creneau = new Creneau(LocalTime.of(heureDébut, 0), LocalTime.of(heureFin, 0));
-                journée.getListCreneauxLibres().add(creneau);
+                Creneau creneau = new Creneau(LocalTime.of(heureDebut, 0), LocalTime.of(heureFin, 0));
+                for (Journée journee : planning.getJournéesPlanifiées()) {
+                    journee.getListCreneauxLibres().add(creneau);
+                }
             }
+        } else if (option == 2) {
+            for (Journée journee : planning.getJournéesPlanifiées()) {
+                System.out.println("Les créneaux libres pour la journée: " + journee.getDate() + ", sous le format HH-HH,HH-HH");
+                String input = scanner.nextLine();
+                String[] slots = input.split(",");
+                for (String slot : slots) {
+                    String[] times = slot.split("-");
+                    int heureDebut = Integer.parseInt(times[0]);
+                    int heureFin = Integer.parseInt(times[1]);
+                    Creneau creneau = new Creneau(LocalTime.of(heureDebut, 0), LocalTime.of(heureFin, 0));
+                    journee.getListCreneauxLibres().add(creneau);
+                }
+            }
+        } else {
+            System.out.println("Option invalide.");
         }
         return planning;
     }
@@ -144,8 +168,17 @@ public class Utilisateur {
             if (creneau2.contientCreneau(creneau)){
               Set<Creneau> resultatDécompositionCreneau =  creneau2.decompositionCreneau(creneau);
             }
-
         }
+
+        return(journée);
+    }
+
+    @Override
+    public String toString() {
+        return "Utilisateur [pseudo=" + pseudo + ", nbMinTaches=" + nbMinTaches + ", historiquePlannings="
+                + historiquePlannings + ", listeCatégories=" + listeCatégories + ", historiqueProjets="
+                + historiqueProjets + ", calendrierPerso=" + calendrierPerso + ", listCatégories=" + listCatégories
+                + "]";
     }
 
 }
