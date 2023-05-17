@@ -9,7 +9,7 @@ public class Journée implements Comparable<Journée> {
     private Badge badgeJournalier;
     private int nbTachesPrévues ;
     private int nbTachesRéalisées;
-    private Set<Creneau> listCreneauxLibres= new HashSet<>(); 
+    private TreeSet<Creneau> listCreneauxLibres= new TreeSet<>(); 
     public LocalDate getDate() {
         return date;
     }
@@ -40,10 +40,10 @@ public class Journée implements Comparable<Journée> {
     public void setNbTachesRéalisées(int nbTachesRéalisées) {
         this.nbTachesRéalisées = nbTachesRéalisées;
     }
-    public Set<Creneau> getListCreneauxLibres() {
+    public TreeSet<Creneau> getListCreneauxLibres() {
         return listCreneauxLibres;
     }
-    public void setListCreneauxLibres(Set<Creneau> listCreneauxLibres) {
+    public void setListCreneauxLibres(TreeSet<Creneau> listCreneauxLibres) {
         this.listCreneauxLibres = listCreneauxLibres;
     }
     @Override

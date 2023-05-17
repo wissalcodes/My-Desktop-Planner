@@ -2,7 +2,7 @@ import java.util.* ;
 import java.time.* ; 
 
 public class Calendrier {
-    TreeSet<Journée> journéesCalendrier = new TreeSet<>(); 
+    TreeSet<Journée> journéesCalendrier = new TreeSet<>(); //
 
     public void afficherCalendrier() {
         System.out.println(journéesCalendrier);

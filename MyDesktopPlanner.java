@@ -1,7 +1,6 @@
 import java.util.*;
 import java.awt.Color;
 import org.w3c.dom.css.RGBColor;
-
 import java.time.* ;
 
 public class MyDesktopPlanner {
@@ -83,10 +82,8 @@ public class MyDesktopPlanner {
         }
     }  
     public void planifier(){
-      
         System.out.println("Choisissez une option:\n1. Planification manuelle d'une tache\n2. Planification d'un ensemble de taches\n");
         Scanner scanner1 = new Scanner(System.in);
-       
         //dans la planification d'un ensemble de taches, on a automatique et manuel.
         int option = Integer.parseInt(scanner1.nextLine());
         if (option == 1){
@@ -122,18 +119,47 @@ public class MyDesktopPlanner {
             String creneauString = scanner.nextLine();
             String[] creneauTimes = creneauString.split("-");
             LocalTime heureDebut = LocalTime.parse(creneauTimes[0]);
-            LocalTime heureFin = LocalTime.parse(creneauTimes[1]);
-            if (heureDebut.isAfter(heureFin)) {
-                throw new IllegalArgumentException("L'heure de début ne peut pas être après l'heure de fin.");
-            }
+            LocalTime heureFin = LocalTime.now();
+          
+                heureFin = LocalTime.parse(creneauTimes[1]);
+         
             Creneau creneau = new Creneau(heureDebut, heureFin);
             utilisateurAuthentifié.planifierTacheManuelle(dateTache, creneau, tache);
         }
         if (option == 2){
-            Planning planning = utilisateurAuthentifié.fixerPériodePlanning();
-            utilisateurAuthentifié.fixerCréneauxLibres(planning);
-            utilisateurAuthentifié.getCalendrierPerso().journéesCalendrier.addAll(planning.getJournéesPlanifiées());
-            //proposition du système.
+            Planning planning = new Planning();
+            System.out.println("inside option 2");
+            try {
+               planning = utilisateurAuthentifié.fixerCréneauxLibres(utilisateurAuthentifié.fixerPériodePlanning());
+               ArrayList<Tache> listTaches = new ArrayList<>();
+               Catégorie c1 = new Catégorie("Studies",new Color(0,0,0));
+               Catégorie c2 = new Catégorie("cooking",new Color(255,255,255));
+               LocalDate date1 = LocalDate.now();
+               LocalTime time1 = LocalTime.now();
+               LocalDate date2 = LocalDate.now();
+               LocalTime time2 = LocalTime.parse("22:00");
+               LocalDate date3 = LocalDate.parse("2023-05-19");
+               LocalTime time3 = LocalTime.parse("18:00");
+               LocalDate date4 = LocalDate.parse("2023-05-19");
+               LocalTime time4 = LocalTime.parse("17:00");
+               Tache tache1 = new Tache(c1,date1,time1,Priorité.LOW,50,"Tache1");
+               Tache tache2 = new Tache(c2,date2,time2,Priorité.HIGH,100,"Tache2");
+               Tache tache3 = new Tache(c2,date3,time3,Priorité.HIGH,100,"Tache3");
+               Tache tache4 = new Tache(c2,date4,time4,Priorité.MEDIUM,100,"Tache4");
+               listTaches.add(tache1);
+               listTaches.add(tache2);
+               listTaches.add(tache3);
+               listTaches.add(tache4);    
+               utilisateurAuthentifié.planifierEnsembleTaches(planning, listTaches);
+               utilisateurAuthentifié.getCalendrierPerso().journéesCalendrier.addAll(planning.getJournéesPlanifiées());
+               //proposition du système.
+            }
+            catch(DateDébutException e){
+                System.out.println("> Erreur: la date de début planning est antérieure à la date du jour!");
+            }
         }
-    }  
+        }
+    
 }
+
+

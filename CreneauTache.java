@@ -1,11 +1,4 @@
-public class CreneauTache {
-    private static int dureeMinimale = 30 ;     //durée minimale de 30 minutes, sera vérifié lors de la décomposition d'un créneau
-    public static int getDureeMinimale() {
-        return dureeMinimale;
-    }
-    public static void setDureeMinimale(int dureeMinimale) {
-        CreneauTache.dureeMinimale = dureeMinimale;
-    }
+public class CreneauTache {   
     private Creneau creneau;
     private TacheSimple tache ;
     private boolean estBloqué = false;  //estBloqué est mise à vrai lorsque la tache ne peut pas remplace ni déplacée

@@ -6,6 +6,8 @@ public class Utilisateur {
     private int nbMinTaches = 1 ; 
     private List<Planning> historiquePlannings; 
     protected Set<Catégorie> listeCatégories = new HashSet<>();
+    protected List<Tache> listeTachesUnscheduled = new ArrayList<>();
+    private static int duréeMinimale = 30 ;     //durée minimale de 30 minutes, sera vérifié lors de la décomposition d'un créneau
     public Set<Catégorie> getListeCatégories() {
         return listeCatégories;
     }
@@ -95,24 +97,15 @@ public class Utilisateur {
             return false;
         return true;
     }
-
     
-    
-    public Planning fixerPériodePlanning() {
+ public Planning fixerPériodePlanning() throws DateDébutException {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Date de début du planning (yyyy-mm-dd): ");
-        LocalDate startDate = LocalDate.parse(scanner.nextLine());
-        try{
-        if(startDate.isBefore(LocalDate.now())){
-            throw new DateDébutException();
-        }
-    }
-    catch(DateDébutException e){
-        System.out.println("> Erreur: la date de début planning est antérieure à la date du jour!");
-    }
+        LocalDate startDate = LocalDate.now();
+        startDate = LocalDate.parse(scanner.nextLine());  
         System.out.print("Date de fin du planning (yyyy-mm-dd): ");
         LocalDate endDate = LocalDate.parse(scanner.nextLine());
-        List<Journée> journéesPlanifiées = new ArrayList<>();
+        TreeSet<Journée> journéesPlanifiées = new TreeSet<>();
         // Itérer sur l'ensemble des journées du calendrier personnel de l'utilisateur authentifié
         for (Journée journée : getCalendrierPerso().getJournéesCalendrier() ) {
             LocalDate date = journée.getDate();
@@ -136,8 +129,8 @@ public class Utilisateur {
             String[] slots = input.split(",");
             for (String slot : slots) {
                 String[] times = slot.split("-");
-                LocalTime heureDebut = LocalTime.parse(times[0], DateTimeFormatter.ofPattern("HH:mm:ss"));
-                LocalTime heureFin = LocalTime.parse(times[1], DateTimeFormatter.ofPattern("HH:mm:ss"));
+                LocalTime heureDebut = LocalTime.parse(times[0], DateTimeFormatter.ofPattern("HH:mm"));
+                LocalTime heureFin = LocalTime.parse(times[1], DateTimeFormatter.ofPattern("HH:mm"));
                 Creneau creneau = new Creneau(heureDebut, heureFin);   
                  for (Journée journee : planning.getJournéesPlanifiées()) {
                     journee.getListCreneauxLibres().add(creneau);
@@ -150,9 +143,11 @@ public class Utilisateur {
                 String[] slots = input.split(",");
                 for (String slot : slots) {
                     String[] times = slot.split("-");
-                    LocalTime heureDebut = LocalTime.parse(times[0], DateTimeFormatter.ofPattern("HH:mm:ss"));
-                    LocalTime heureFin = LocalTime.parse(times[1], DateTimeFormatter.ofPattern("HH:mm:ss"));
-                    Creneau creneau = new Creneau(heureDebut, heureFin);                  journee.getListCreneauxLibres().add(creneau);
+                    LocalTime heureDebut = LocalTime.parse(times[0], DateTimeFormatter.ofPattern("HH:mm"));
+                    LocalTime heureFin = LocalTime.parse(times[1], DateTimeFormatter.ofPattern("HH:mm"));
+                    Creneau creneau = new Creneau(heureDebut, heureFin);               
+                    journee.getListCreneauxLibres().add(creneau);
+                
                 }
             }
         } else {
@@ -196,6 +191,82 @@ public class Utilisateur {
                 + historiqueProjets + ", calendrierPerso=" + calendrierPerso + ", listCatégories=" + listCatégories
                 + "]";
     }
-    //Dans le cas de la replanification, ou bien si on essaie de programmer un
+    //Programmation d'un ensemble de taches automatiquement / proposition du système
+    public Planning planifierEnsembleTaches(Planning planning, ArrayList<Tache> listTaches) 
+    {
+        //le planning passé en argument correspond à celui défini par la période de l'utilisateur
+        // 1.Ordonner l'ensemble des taches selon les critères
+        listTaches = listTachesOrdonnées(listTaches);
+        // 2. parcourir les journées correspondante dans le calendrier (ou dans le planning, puisqu'on initialise le planning depuis le calendrier)
+        LocalDate dateJournée = planning.getDateDébut();
+        Journée journée = calendrierPerso.getJournéeByDate(dateJournée);
+        TreeSet<Creneau> listCreneauxLibres = journée.getListCreneauxLibres();
+        Iterator iteratorTaches = listTaches.iterator(); //itérer les journées 
+        Iterator iteratorJournéesPlanning = planning.getJournéesPlanifiées().iterator();
+        //tant qu'il reste des taches à planifier dans le planning,
+        while(iteratorTaches.hasNext()){
+            //pour chaque tache, extraire les créneaux libres de la journée courante
+            Tache tache =(Tache) iteratorTaches.next();
+            Creneau creneauLibre = journée.getListCreneauxLibres().first();
+            Iterator iteratorCréneauxLibres = listCreneauxLibres.iterator();
+            //parcourir le TreeSet des créneaux libres de la journée
+            while (iteratorCréneauxLibres.hasNext() == true && tache.getEtat()==EtatTache.UNSCHEDULED){
+                creneauLibre = (Creneau) iteratorCréneauxLibres.next();
+                //tester si les deadlines ne sont pas atteints
+                if((tache.getDeadlineDate().isAfter(journée.getDate())|tache.getDeadlineDate().isEqual(journée.getDate()))&& tache.getDeadlineHeure().isAfter(creneauLibre.getHeureFin())){     
+                    //tester la durée du créneau si elle est supérieure ou égale à la durée de la tache
+                    LocalTime début = creneauLibre.getHeureDebut();
+                    LocalTime fin = creneauLibre.getHeureFin();
+                    Duration duration = Duration.between(début,fin);
+                    long durationMinutes = duration.toMinutes();
+                    //si elle l'est:
+                    if (durationMinutes > tache.getDurée()){
+                        //Décomposition du créneau
+                            //1. Calculer la durée du créneau restant
+                        long duréeCréneauLibreRésultant = durationMinutes - tache.getDurée();
+                        if (duréeCréneauLibreRésultant > duréeMinimale){
+                            //On décompose le créneau
+                            LocalTime creneau1fin =  début.plusMinutes(tache.getDurée());
+                            LocalTime creneau2Début =  début.plusMinutes(tache.getDurée());
+                            Creneau creneau1 = new Creneau(début,creneau1fin);
+                            Creneau creneau2 = new Creneau(creneau2Début, fin);
+                            journée.getListCreneauxLibres().remove(creneauLibre);
+                            journée.getListCreneauxLibres().add(creneau2);
+                            CreneauTache creneauTache = new CreneauTache(creneau1, (TacheSimple)tache);
+                            journée.getListCreneauxTaches().add(creneauTache);
+                        }
+                        else{
+                            //On associe le créneau entier à la tache
+                            CreneauTache creneauTache = new CreneauTache(creneauLibre,(TacheSimple)tache);
+                            journée.getListCreneauxTaches().add(creneauTache);
+                            journée.getListCreneauxLibres().remove(creneauLibre);
+                        }
+                    }
+                }
+            }
+            // System.out.println(tache);
 
+            // tester si la durée du nouveau créneau libre est supérieure à la durée minimale de l'utilisateur
+            // associer la première partie avec la tache, ajouter CréneauTache à la journée
+
+        //Tester si la tache a été correctement programmée
+        if (tache.getEtat() == EtatTache.UNSCHEDULED){
+            listeTachesUnscheduled.add(tache);
+        }
+        //Vérifier si on est toujours dans la meme journée ou si on doit passer à la journée suivante (vérifier s'il reste des créneaux libres dans la journée)
+        if (iteratorCréneauxLibres.hasNext()==false){
+            journée = (Journée) iteratorJournéesPlanning.next();
+        }
+        }
+        // afficher et retourner le planning proposé par le système
+        return(planning);
+    }
+    //Méthode qui ordonne l'ensemble de taches selon le deadlineDate, puis deadlineHeure, puis par la priorité de la tache
+    public ArrayList<Tache> listTachesOrdonnées(ArrayList<Tache> listTaches) {
+        // Sort the tasks by deadline date, deadline time, and priority
+        listTaches.sort(Comparator.comparing(Tache::getDeadlineDate)
+                .thenComparing(Tache::getDeadlineHeure)
+                .thenComparing(Tache::getPriorité));
+      return listTaches;
+    }
 }

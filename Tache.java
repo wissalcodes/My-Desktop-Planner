@@ -21,7 +21,7 @@ public class Tache {
     protected int durée;
     protected String nom;
     protected EtatTache etat = EtatTache.NOTREALIZED; 
-   
+
     public EtatTache getEtat() {
         return etat;
     }
