@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Control.InscriptionController">
+   <children>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="238.0" layoutY="117.0" prefHeight="24.0" prefWidth="122.0" text="Inscription" textFill="#00504c">
+         <font>
+            <Font name="Times New Roman Bold" size="21.0" />
+         </font>
+      </Label>
+      <Button fx:id="retournerButton" layoutX="186.0" layoutY="240.0" mnemonicParsing="false" onAction="#retourner" prefHeight="26.0" prefWidth="80.0" text="return" />
+      <Button fx:id="okButton" layoutX="349.0" layoutY="240.0" mnemonicParsing="false" onAction="#okInscription" prefHeight="26.0" prefWidth="80.0" text="OK" />
+      <TextField fx:id="inscriptionTextField" alignment="CENTER" layoutX="148.0" layoutY="187.0" prefHeight="22.0" prefWidth="303.0" />
+      <ImageView fitHeight="98.0" fitWidth="122.0" layoutX="239.0">
+         <image>
+            <Image url="@../../../../../../../Pictures/logo%20calendrier.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
