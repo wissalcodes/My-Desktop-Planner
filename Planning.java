@@ -39,7 +39,7 @@ public class Planning {
     }
     @Override
     public String toString() {
-        return "Planning [dateDébut=" + dateDébut + ", dateFin=" + dateFin + ", journéesPlanifiées="
+        return "Planning [\ndateDébut=" + dateDébut + ",\ndateFin=" + dateFin + ", \njournéesPlanifiées="
                 + journéesPlanifiées + "]";
     }
 }

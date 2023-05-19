@@ -8,11 +8,11 @@ public class Main {
         Utilisateur user = new Utilisateur("Pookie");
         //Planning planning =  user.planifierEnsembleTaches(listTaches);
         app.ajouterUtilisateur(user);
-        Utilisateur user2 = new Utilisateur("Pookie");
+        //Utilisateur user2 = new Utilisateur("Pookie");
 
-        app.ajouterUtilisateur(user2);
-       // app.authentification("Pookie");
-       // app.planifier();
+        //app.ajouterUtilisateur(user2);
+       app.authentification("Pookie");
+       user.planifier();
         //Programmer un ensemble 
     }
 }

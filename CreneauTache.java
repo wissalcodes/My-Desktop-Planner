@@ -1,4 +1,5 @@
-public class CreneauTache {   
+public class CreneauTache {
+  
     private Creneau creneau;
     private TacheSimple tache ;
     private boolean estBloqué = false;  //estBloqué est mise à vrai lorsque la tache ne peut pas remplace ni déplacée
