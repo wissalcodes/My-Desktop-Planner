@@ -222,12 +222,12 @@ public class Utilisateur {
                         LocalTime début = creneauLibre.getHeureDebut();
                         LocalTime fin = creneauLibre.getHeureFin();
                         Duration duration = Duration.between(début, fin);
-                        long durationMinutes = duration.toMinutes();
-        
+                 
+                        long durationMinutes = duration.toMinutes();    //durationMinutes est la durée maximale du créneau
                         if (durationMinutes >= tache.getDurée()) {
-                         // Schedule the task
-                    if (durationMinutes > duréeMinimale) {
-                        // Split the slot if necessary
+                         // On planifie la tache
+                         //Tester si décomposer le créneau ou bien l'allouer entièrement à la tache
+                    if (durationMinutes - tache.getDurée() > duréeMinimale) { //Il y'a décomposition
                         LocalTime creneau1fin = début.plusMinutes(tache.getDurée());
                         LocalTime creneau2Début = début.plusMinutes(tache.getDurée());
                         Creneau creneau1 = new Creneau(début, creneau1fin);
@@ -236,22 +236,21 @@ public class Utilisateur {
                         CreneauTache creneauTache = new CreneauTache(creneau1, (TacheSimple) tache);
                         journée.getListCreneauxTaches().add(creneauTache);
                         
-                        // Update the free slots
+                        //MàJ des créneaux libres de la journée
                         journée.getListCreneauxLibres().remove(creneauLibre);
                         journée.getListCreneauxLibres().add(creneau2);
                         planning.getJournéesPlanifiées().add(journée);
-                        System.out.println(creneauTache);
                     } else {
                         CreneauTache creneauTache = new CreneauTache(creneauLibre, (TacheSimple) tache);
                         journée.getListCreneauxTaches().add(creneauTache);
-                        // Update the free slots
+                        //MàJ des créneaux libres de la journée
                         journée.getListCreneauxLibres().remove(creneauLibre);
                         planning.getJournéesPlanifiées().add(journée);
-                        System.out.println(creneauTache);
                     }       
+                    //Marquer la tache comme non réalisée
                     tache.setEtat(EtatTache.NOTREALIZED);
-                            iteratorTaches.remove(); // Remove the scheduled task from the list
-                            break; // Exit the loop once a task is scheduled
+                    iteratorTaches.remove();// Supprimer la tache depuis la liste
+                            break; // Quitter la boucle une fois la tache est programmée
                         } 
                     } else {
                         System.out.println("Le deadline de cette tache a été dépassé");
@@ -259,15 +258,20 @@ public class Utilisateur {
                 }
         
                 if (tache.getEtat() == EtatTache.NOTREALIZED) {
-                    break; // Exit the loop if the task is scheduled
+                    break; // Quitter la boucle si la tache a été programmée
                 }
             }
-        
+        }
+        //Sauvegarder les taches non programmées dans l'utilisateur
+        ArrayList<Tache> listeTachesUnscheduled = new ArrayList<>();
+        for (Tache tache : listTaches) {
             if (tache.getEtat() == EtatTache.UNSCHEDULED) {
                 listeTachesUnscheduled.add(tache);
-                iteratorTaches.remove();
             }
         }
+        this.listeTachesUnscheduled = listeTachesUnscheduled ;
+        System.out.println("Liste des taches non planifiés: " + this.listeTachesUnscheduled);
+
       System.out.println("\n\n****** "+ planning);
         // afficher et retourner le planning proposé par le système
         return(planning);
