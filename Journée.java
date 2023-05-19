@@ -4,8 +4,11 @@ public class Journée implements Comparable<Journée> {
     public Journée(LocalDate date) {
         this.date = date;
     }
+    public Journée(){
+        
+    }
     private LocalDate date; //Date de la journée sous le format aaaa-mm-jj
-    private Set<CreneauTache> listCreneauxTaches = new HashSet<>();  //Les couples créneaux taches sont uniques, il ne peut pas y'avoir le meme couple. c'est plus utile quand on aura de remplacer le couple.
+    private Set<CreneauTache> listCreneauxTaches = new TreeSet<>();  //Les couples créneaux taches sont uniques, il ne peut pas y'avoir le meme couple. c'est plus utile quand on aura de remplacer le couple.
     private Badge badgeJournalier;
     private int nbTachesPrévues ;
     private int nbTachesRéalisées;

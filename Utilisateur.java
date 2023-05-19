@@ -202,9 +202,9 @@ public class Utilisateur {
         // 2. parcourir les journées correspondante dans le calendrier (ou dans le planning, puisqu'on initialise le planning depuis le calendrier)
         LocalDate dateJournée = planning.getDateDébut();
         Journée journée = calendrierPerso.getJournéeByDate(dateJournée);
-        Iterator iteratorTaches = listTaches.iterator(); //itérer les journées 
         //tant qu'il reste des taches à planifier dans le planning,
         
+        Iterator iteratorTaches = listTaches.iterator(); //itérer les journées 
         while (iteratorTaches.hasNext()) {
             Tache tache = (Tache) iteratorTaches.next();        
             Iterator<Journée> iteratorJournéesPlanning = planning.getJournéesPlanifiées().iterator();
@@ -225,10 +225,10 @@ public class Utilisateur {
                         Duration duration = Duration.between(début, fin);
                  
                         long durationMinutes = duration.toMinutes();    //durationMinutes est la durée maximale du créneau
-                        if (durationMinutes >= tache.getDurée()) {
+                        if (durationMinutes >= tache.getDurée() && tache instanceof TacheSimple) {
                          // On planifie la tache
                          //Tester si décomposer le créneau ou bien l'allouer entièrement à la tache
-                    if (durationMinutes - tache.getDurée() > duréeMinimale) { //Il y'a décomposition
+                    if (durationMinutes - tache.getDurée() > duréeMinimale ) { //Il y'a décomposition
                         LocalTime creneau1fin = début.plusMinutes(tache.getDurée());
                         LocalTime creneau2Début = début.plusMinutes(tache.getDurée());
                         Creneau creneau1 = new Creneau(début, creneau1fin);
@@ -254,31 +254,51 @@ public class Utilisateur {
                             break; // Quitter la boucle une fois la tache est programmée
                         } 
                         else{  
-                            //la durée de créneau est inférieure à celle de la tache à programmer
-                            if(tache instanceof TacheDécomposable){ //si la tache est décomposable
+                            //la durée de créneau est inférieure à celle de la tache à programmer ou la tache est décomposable
+                            if(tache instanceof TacheDécomposable ){ //si la tache est décomposable
+                               if(tache.getDurée()>durationMinutes){   
+                                   TacheDécomposable tacheDecomposable = (TacheDécomposable) tache;
+                                   // on extrait une sous tache de la meme durée que le créneau
+                                   TacheSimple sousTache = new TacheSimple(tache.catégorie, tache.getDeadlineDate(), tache.deadlineHeure, tache.getPriorité(), durationMinutes,tache.getNom()+(tacheDecomposable.getListeSousTaches().size()+1),0); 
+                                   //MAJ de son état
+                                   sousTache.setEtat(EtatTache.NOTREALIZED);
+                                   //ajouter la sous-tache à la liste des sous taches de la tache décomposable
+                                   tacheDecomposable.ajouterSousTache(sousTache);
+                                   tacheDecomposable.setDurée(tacheDecomposable.getDurée()-sousTache.getDurée());
+                                   CreneauTache creneauTache = new CreneauTache(creneauLibre, sousTache);
+                                   //Programmation de la sous-tache
+                                   journée.getListCreneauxTaches().add(creneauTache);
+                                  System.out.println("Hada l creneau li programmit: " + creneauTache);
+                                  //MàJ des créneaux libres de la journée
+                                  iteratorCréneauxLibres.remove();
+                                  //la tache est considérée
+                                   tache = tacheDecomposable;
+                                   System.out.println("Tache après prog ss : "+tache);
+                                  //    tache.setEtat(EtatTache.NOTREALIZED);
+                               } 
+                               else{ 
                                 TacheDécomposable tacheDecomposable = (TacheDécomposable) tache;
+                                System.out.println("im last sous tache, this me: " + tacheDecomposable);
+
                                 // on extrait une sous tache de la meme durée que le créneau
-                                TacheSimple sousTache = new TacheSimple(tache.catégorie, tache.getDeadlineDate(), tache.deadlineHeure, tache.getPriorité(), durationMinutes,tache.getNom()+(tacheDecomposable.getListeSousTaches().size()+1),0); 
+                                TacheSimple sousTache = new TacheSimple(tache.catégorie, tache.getDeadlineDate(), tache.deadlineHeure, tache.getPriorité(), tache.getDurée(),tache.getNom()+(tacheDecomposable.getListeSousTaches().size()+1),0); 
                                 sousTache.setEtat(EtatTache.NOTREALIZED);
-                                tacheDecomposable.ajouterSousTache(sousTache);
                                 CreneauTache creneauTache = new CreneauTache(creneauLibre, sousTache);
-                               journée.getListCreneauxTaches().add(creneauTache);
-                               System.out.println("Hada l creneau li dit: " + creneauTache);
-                               //MàJ des créneaux libres de la journée
-                               iteratorCréneauxLibres.remove();
-                               tache.setEtat(EtatTache.NOTREALIZED);
-                               if(tache.getDurée()- durationMinutes > 0){
-                                   TacheDécomposable tacheRestante = new TacheDécomposable(tache.catégorie, tache.getDeadlineDate(), tache.deadlineHeure, tache.getPriorité(), tache.getDurée() - durationMinutes,tache.getNom()+(tacheDecomposable.getListeSousTaches().size()+1)); 
-                                 System.out.println("Mazalet la tache, zid hada" + tacheRestante);
-                                   listTaches.add(tacheRestante);
-                                }
+                                //Programmation de la sous-tache
+                                 tache.setEtat(EtatTache.NOTREALIZED);
+                                journée.getListCreneauxTaches().add(creneauTache);
+                                planning.getJournéesPlanifiées().add(journée);
+                                iteratorCréneauxLibres.remove();
+                               // iteratorTaches.next();
+                                break;
+                               }
+                             
                             }
                         }
                     } else {
                         System.out.println("Le deadline de cette tache a été dépassé");
                     }
                 }
-        
                 if (tache.getEtat() == EtatTache.NOTREALIZED) {
                     break; // Quitter la boucle si la tache a été programmée
                 }
