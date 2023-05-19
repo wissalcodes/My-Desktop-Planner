@@ -20,7 +20,7 @@ public class Tache {
     protected Priorité priorité;
     protected int durée;
     protected String nom;
-    protected EtatTache etat = EtatTache.NOTREALIZED; 
+    protected EtatTache etat = EtatTache.UNSCHEDULED; 
 
     public EtatTache getEtat() {
         return etat;

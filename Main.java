@@ -5,11 +5,14 @@ import java.net.http.WebSocket.Listener;
 public class Main {
     public static void main  (String[] args) {
         MyDesktopPlanner app = new MyDesktopPlanner() ; 
-        Utilisateur user = new Utilisateur("Pookie",new Calendrier());
+        Utilisateur user = new Utilisateur("Pookie");
         //Planning planning =  user.planifierEnsembleTaches(listTaches);
         app.ajouterUtilisateur(user);
-        app.authentification("Pookie");
-        app.planifier();
+        Utilisateur user2 = new Utilisateur("Pookie");
+
+        app.ajouterUtilisateur(user2);
+       // app.authentification("Pookie");
+       // app.planifier();
         //Programmer un ensemble 
     }
 }

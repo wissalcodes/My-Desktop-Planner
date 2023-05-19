@@ -25,12 +25,11 @@ public class Utilisateur {
     }
 
     private List<Projet> historiqueProjets;  
-    private Calendrier calendrierPerso;
+    private Calendrier calendrierPerso = new Calendrier();
     private List<Catégorie> listCatégories ; 
 
-    public Utilisateur(String pseudo, Calendrier calendrierPerso) {
+    public Utilisateur(String pseudo) {
         this.pseudo = pseudo;
-        this.calendrierPerso = calendrierPerso;
     }
 
     // getters and setters
@@ -200,64 +199,76 @@ public class Utilisateur {
         // 2. parcourir les journées correspondante dans le calendrier (ou dans le planning, puisqu'on initialise le planning depuis le calendrier)
         LocalDate dateJournée = planning.getDateDébut();
         Journée journée = calendrierPerso.getJournéeByDate(dateJournée);
-        TreeSet<Creneau> listCreneauxLibres = journée.getListCreneauxLibres();
         Iterator iteratorTaches = listTaches.iterator(); //itérer les journées 
-        Iterator iteratorJournéesPlanning = planning.getJournéesPlanifiées().iterator();
         //tant qu'il reste des taches à planifier dans le planning,
-        while(iteratorTaches.hasNext()){
-            //pour chaque tache, extraire les créneaux libres de la journée courante
-            Tache tache =(Tache) iteratorTaches.next();
-            Creneau creneauLibre = journée.getListCreneauxLibres().first();
-            Iterator iteratorCréneauxLibres = listCreneauxLibres.iterator();
-            //parcourir le TreeSet des créneaux libres de la journée
-            while (iteratorCréneauxLibres.hasNext() == true && tache.getEtat()==EtatTache.UNSCHEDULED){
-                creneauLibre = (Creneau) iteratorCréneauxLibres.next();
-                //tester si les deadlines ne sont pas atteints
-                if((tache.getDeadlineDate().isAfter(journée.getDate())|tache.getDeadlineDate().isEqual(journée.getDate()))&& tache.getDeadlineHeure().isAfter(creneauLibre.getHeureFin())){     
-                    //tester la durée du créneau si elle est supérieure ou égale à la durée de la tache
-                    LocalTime début = creneauLibre.getHeureDebut();
-                    LocalTime fin = creneauLibre.getHeureFin();
-                    Duration duration = Duration.between(début,fin);
-                    long durationMinutes = duration.toMinutes();
-                    //si elle l'est:
-                    if (durationMinutes > tache.getDurée()){
-                        //Décomposition du créneau
-                            //1. Calculer la durée du créneau restant
-                        long duréeCréneauLibreRésultant = durationMinutes - tache.getDurée();
-                        if (duréeCréneauLibreRésultant > duréeMinimale){
-                            //On décompose le créneau
-                            LocalTime creneau1fin =  début.plusMinutes(tache.getDurée());
-                            LocalTime creneau2Début =  début.plusMinutes(tache.getDurée());
-                            Creneau creneau1 = new Creneau(début,creneau1fin);
-                            Creneau creneau2 = new Creneau(creneau2Début, fin);
-                            journée.getListCreneauxLibres().remove(creneauLibre);
-                            journée.getListCreneauxLibres().add(creneau2);
-                            CreneauTache creneauTache = new CreneauTache(creneau1, (TacheSimple)tache);
-                            journée.getListCreneauxTaches().add(creneauTache);
-                        }
-                        else{
-                            //On associe le créneau entier à la tache
-                            CreneauTache creneauTache = new CreneauTache(creneauLibre,(TacheSimple)tache);
-                            journée.getListCreneauxTaches().add(creneauTache);
-                            journée.getListCreneauxLibres().remove(creneauLibre);
-                        }
+   
+        while (iteratorTaches.hasNext()) {
+            Tache tache = (Tache) iteratorTaches.next();
+            System.out.println(tache);
+        
+            Iterator<Journée> iteratorJournéesPlanning = planning.getJournéesPlanifiées().iterator();
+        
+            while (iteratorJournéesPlanning.hasNext() && tache.getEtat() == EtatTache.UNSCHEDULED) {
+                 journée = iteratorJournéesPlanning.next();
+                TreeSet<Creneau> listCreneauxLibres = journée.getListCreneauxLibres();
+                Iterator<Creneau> iteratorCréneauxLibres = listCreneauxLibres.iterator();
+        
+                while (iteratorCréneauxLibres.hasNext()) {
+                    Creneau creneauLibre = iteratorCréneauxLibres.next();
+        
+                    if (tache.getDeadlineDate().isAfter(journée.getDate()) ||
+                            (tache.getDeadlineDate().isEqual(journée.getDate()) && tache.getDeadlineHeure().isAfter(creneauLibre.getHeureFin()))) {
+        
+                        LocalTime début = creneauLibre.getHeureDebut();
+                        LocalTime fin = creneauLibre.getHeureFin();
+                        Duration duration = Duration.between(début, fin);
+                        long durationMinutes = duration.toMinutes();
+        
+                        if (durationMinutes >= tache.getDurée()) {
+                         // Schedule the task
+                    if (durationMinutes > duréeMinimale) {
+                        // Split the slot if necessary
+                        LocalTime creneau1fin = début.plusMinutes(tache.getDurée());
+                        LocalTime creneau2Début = début.plusMinutes(tache.getDurée());
+                        Creneau creneau1 = new Creneau(début, creneau1fin);
+                        Creneau creneau2 = new Creneau(creneau2Début, fin);
+                        
+                        CreneauTache creneauTache = new CreneauTache(creneau1, (TacheSimple) tache);
+                        journée.getListCreneauxTaches().add(creneauTache);
+                        
+                        // Update the free slots
+                        journée.getListCreneauxLibres().remove(creneauLibre);
+                        journée.getListCreneauxLibres().add(creneau2);
+                        planning.getJournéesPlanifiées().add(journée);
+                        System.out.println(creneauTache);
+                    } else {
+                        CreneauTache creneauTache = new CreneauTache(creneauLibre, (TacheSimple) tache);
+                        journée.getListCreneauxTaches().add(creneauTache);
+                        // Update the free slots
+                        journée.getListCreneauxLibres().remove(creneauLibre);
+                        planning.getJournéesPlanifiées().add(journée);
+                        System.out.println(creneauTache);
+                    }       
+                    tache.setEtat(EtatTache.NOTREALIZED);
+                            iteratorTaches.remove(); // Remove the scheduled task from the list
+                            break; // Exit the loop once a task is scheduled
+                        } 
+                    } else {
+                        System.out.println("Le deadline de cette tache a été dépassé");
                     }
                 }
+        
+                if (tache.getEtat() == EtatTache.NOTREALIZED) {
+                    break; // Exit the loop if the task is scheduled
+                }
             }
-            // System.out.println(tache);
-
-            // tester si la durée du nouveau créneau libre est supérieure à la durée minimale de l'utilisateur
-            // associer la première partie avec la tache, ajouter CréneauTache à la journée
-
-        //Tester si la tache a été correctement programmée
-        if (tache.getEtat() == EtatTache.UNSCHEDULED){
-            listeTachesUnscheduled.add(tache);
+        
+            if (tache.getEtat() == EtatTache.UNSCHEDULED) {
+                listeTachesUnscheduled.add(tache);
+                iteratorTaches.remove();
+            }
         }
-        //Vérifier si on est toujours dans la meme journée ou si on doit passer à la journée suivante (vérifier s'il reste des créneaux libres dans la journée)
-        if (iteratorCréneauxLibres.hasNext()==false){
-            journée = (Journée) iteratorJournéesPlanning.next();
-        }
-        }
+      System.out.println("\n\n****** "+ planning);
         // afficher et retourner le planning proposé par le système
         return(planning);
     }

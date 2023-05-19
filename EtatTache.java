@@ -1,5 +1,6 @@
 public enum EtatTache {
-    UNSCHEDULED,    // S'il rdt
+    
+    UNSCHEDULED,    
     NOTREALIZED,
     COMPLETED,
     INPROGRESS,

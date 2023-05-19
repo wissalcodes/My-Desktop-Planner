@@ -4,7 +4,7 @@ import org.w3c.dom.css.RGBColor;
 import java.time.* ;
 
 public class MyDesktopPlanner {
-    protected Utilisateur utilisateurAuthentifié = new Utilisateur("",new Calendrier());
+    protected Utilisateur utilisateurAuthentifié = new Utilisateur("");
     public Utilisateur getUtilisateurAuthentifié() {
         return utilisateurAuthentifié;
     }
@@ -23,36 +23,35 @@ public class MyDesktopPlanner {
         this.listUtilisateurs = listUtilisateurs;
     }
 
-   public boolean rechercheUtilisateur(String pseudo){  //recherche un utilisateur dans la liste des utilisateurs et retourne vrai s'il est inscrit
-     boolean trouv = false;
-     
-     for (Iterator<Utilisateur> iterator = listUtilisateurs.iterator(); iterator.hasNext();){
-        Utilisateur u = (Utilisateur) iterator.next();
-        if (u.getPseudo() == pseudo){
-            trouv = true;
-        }
-     }
-    return trouv;
-   }
+    public boolean rechercheUtilisateur(String pseudo) {
+        return listUtilisateurs.contains(new Utilisateur(pseudo));
+    }
    public void ajouterUtilisateur(Utilisateur utilisateur){
-    System.out.println("Utilisateur créé avec succès.\nIntroduisez les catégories souhaitées, suivies de leur couleur (au format RGB séparé par des virgules). Tapez 'stop' pour arrêter la saisie.");
-    Scanner scanner = new Scanner(System.in);
-    String categorieNom;
-    do {
-        System.out.print("Nom de la catégorie : ");
-        categorieNom = scanner.nextLine();
-        if (!categorieNom.equalsIgnoreCase("stop")) {
-            System.out.print("Couleur de la catégorie (au format RGB séparé par des virgules) : ");
-            String[] rgbString = scanner.nextLine().split(",");
-            int r = Integer.parseInt(rgbString[0].trim());
-            int g = Integer.parseInt(rgbString[1].trim());
-            int b = Integer.parseInt(rgbString[2].trim());
-            Color couleur = new Color(r, g, b);
-            Catégorie categorie = new Catégorie(categorieNom, couleur);
-            utilisateur.listeCatégories.add(categorie);
-        }
-    } while (!categorieNom.equalsIgnoreCase("stop"));
-    listUtilisateurs.add(utilisateur);
+    if(rechercheUtilisateur(utilisateur.getPseudo())==false)
+    {
+        System.out.println("Utilisateur créé avec succès.\nIntroduisez les catégories souhaitées, suivies de leur couleur (au format RGB séparé par des virgules). Tapez 'stop' pour arrêter la saisie.");
+        Scanner scanner = new Scanner(System.in);
+        String categorieNom;
+        do {
+            System.out.print("Nom de la catégorie : ");
+            categorieNom = scanner.nextLine();
+            if (!categorieNom.equalsIgnoreCase("stop")) {
+                System.out.print("Couleur de la catégorie (au format RGB séparé par des virgules) : ");
+                String[] rgbString = scanner.nextLine().split(",");
+                int r = Integer.parseInt(rgbString[0].trim());
+                int g = Integer.parseInt(rgbString[1].trim());
+                int b = Integer.parseInt(rgbString[2].trim());
+                Color couleur = new Color(r, g, b);
+                Catégorie categorie = new Catégorie(categorieNom, couleur);
+                utilisateur.listeCatégories.add(categorie);
+            }
+        } while (!categorieNom.equalsIgnoreCase("stop"));
+        listUtilisateurs.add(utilisateur);
+
+    }
+    else{
+        System.out.println("Un utilisateur avec ce pseudo existe déjà.\nVeuillez resaisir un pseudo");
+    }
 }
     public Utilisateur getUtilisateurParPseudo(String pseudo) {
         for (Utilisateur u : listUtilisateurs) {
@@ -134,18 +133,18 @@ public class MyDesktopPlanner {
                ArrayList<Tache> listTaches = new ArrayList<>();
                Catégorie c1 = new Catégorie("Studies",new Color(0,0,0));
                Catégorie c2 = new Catégorie("cooking",new Color(255,255,255));
-               LocalDate date1 = LocalDate.now();
+               LocalDate date1 = LocalDate.parse("2023-06-20");
                LocalTime time1 = LocalTime.now();
-               LocalDate date2 = LocalDate.now();
+               LocalDate date2 = LocalDate.parse("2023-05-29");
                LocalTime time2 = LocalTime.parse("22:00");
-               LocalDate date3 = LocalDate.parse("2023-05-19");
+               LocalDate date3 = LocalDate.parse("2023-05-28");
                LocalTime time3 = LocalTime.parse("18:00");
-               LocalDate date4 = LocalDate.parse("2023-05-19");
+               LocalDate date4 = LocalDate.parse("2023-05-28");
                LocalTime time4 = LocalTime.parse("17:00");
-               Tache tache1 = new Tache(c1,date1,time1,Priorité.LOW,50,"Tache1");
-               Tache tache2 = new Tache(c2,date2,time2,Priorité.HIGH,100,"Tache2");
-               Tache tache3 = new Tache(c2,date3,time3,Priorité.HIGH,100,"Tache3");
-               Tache tache4 = new Tache(c2,date4,time4,Priorité.MEDIUM,100,"Tache4");
+               TacheSimple tache1 = new TacheSimple(c1,date1,time1,Priorité.LOW,50,"Tache1",0);
+               TacheSimple tache2 = new TacheSimple(c2,date2,time2,Priorité.HIGH,100,"Tache2",0);
+               TacheSimple tache3 = new TacheSimple(c2,date3,time3,Priorité.HIGH,100,"Tache3",0);
+               TacheSimple tache4 = new TacheSimple(c2,date4,time4,Priorité.MEDIUM,100,"Tache4",0);
                listTaches.add(tache1);
                listTaches.add(tache2);
                listTaches.add(tache3);
