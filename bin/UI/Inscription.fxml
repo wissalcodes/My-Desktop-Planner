@@ -15,13 +15,18 @@
             <Font name="Times New Roman Bold" size="21.0" />
          </font>
       </Label>
-      <Button fx:id="retournerButton" layoutX="186.0" layoutY="240.0" mnemonicParsing="false" onAction="#retourner" prefHeight="26.0" prefWidth="80.0" text="return" />
-      <Button fx:id="okButton" layoutX="349.0" layoutY="240.0" mnemonicParsing="false" onAction="#okInscription" prefHeight="26.0" prefWidth="80.0" text="OK" />
+      <Button fx:id="retournerButton" layoutX="186.0" layoutY="253.0" mnemonicParsing="false" onAction="#retourner" prefHeight="26.0" prefWidth="80.0" text="return" />
+      <Button fx:id="okButton" layoutX="349.0" layoutY="253.0" mnemonicParsing="false" onAction="#okInscription" prefHeight="26.0" prefWidth="80.0" text="OK" />
       <TextField fx:id="inscriptionTextField" alignment="CENTER" layoutX="148.0" layoutY="187.0" prefHeight="22.0" prefWidth="303.0" />
       <ImageView fitHeight="98.0" fitWidth="122.0" layoutX="239.0">
          <image>
             <Image url="@../../../../../../../Pictures/logo%20calendrier.png" />
          </image>
       </ImageView>
+      <Label fx:id="ajoutSuccesLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="152.0" layoutY="219.0" prefHeight="18.0" prefWidth="303.0" textFill="#3eb168">
+         <font>
+            <Font name="Times New Roman" size="13.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

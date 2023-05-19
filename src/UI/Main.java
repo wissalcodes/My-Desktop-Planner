@@ -2,7 +2,9 @@ package UI ;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 import Control.AuthenticationController;
 import Noyau.*;
@@ -27,11 +29,13 @@ public class Main extends Application {
         
         Calendrier calendrier1 = new Calendrier() ;
         Utilisateur user1 = new Utilisateur("FARAH", calendrier1) ;
+        Utilisateur user2 = new Utilisateur("FARAH", calendrier1) ;
+
 
         Set<Utilisateur> userSet = new HashSet<Utilisateur>();
 
         userSet.add(user1) ;
-
+        userSet.add(user2);
         MyDesktopPlanner planner = new MyDesktopPlanner(userSet) ;
 
 try{

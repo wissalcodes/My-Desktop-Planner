@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 
 public class AuthenticationController {
 
-    private MyDesktopPlanner planner ; 
+    protected MyDesktopPlanner planner ; 
 
     @FXML
     private Button authetifierButton;
@@ -44,10 +44,12 @@ public class AuthenticationController {
         this.planner = planner ; 
     }
 
-    void afficherPage(String path){
+    /*void afficherPage( FXMLLoader loader , ){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent root = loader.load() ; 
+            InscriptionController inscrCtrl = loader.getController() ;
+            inscrCtrl.setMyDesktop(planner);
             Scene s = new Scene(root);
             Stage calendarStage = new Stage() ;
             calendarStage.setScene(s);
@@ -57,7 +59,7 @@ public class AuthenticationController {
             e.printStackTrace();
         }
       
-    }
+    }*/
       
     @FXML
     void clickAuthentifier(ActionEvent event) {
@@ -65,7 +67,17 @@ public class AuthenticationController {
        boolean existe = this.planner.rechercheUtilisateur(pseudo);
 
         if(existe){
-             afficherPage("/UI/Calendar.fxml");
+            try{
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/Calendar.fxml"));
+                Parent root = loader.load() ; 
+                Scene s = new Scene(root);
+                Stage calendarStage = new Stage() ;
+                calendarStage.setScene(s);
+                calendarStage.show();
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
         }
         else{
             matriculeNonTrouve(pseudo);
@@ -73,9 +85,22 @@ public class AuthenticationController {
     }
 
     @FXML
-    void inscrire(ActionEvent event) {
-     // FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/Inscription.fxml"));
-           afficherPage("/UI/Inscription.fxml");    }
+    void inscrire(ActionEvent event) { //le code d'affichage doit a la fin etre dans une metode a part, des que 
+    // je trouve un moyen de set MyDesctopPlanner dans insricontrolleur sans callendarcontrolleur
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/Inscription.fxml"));
+            Parent root = loader.load() ; 
+            InscriptionController inscrCtrl = loader.getController() ;
+            inscrCtrl.setMyDesktop(planner);
+            Scene s = new Scene(root);
+            Stage calendarStage = new Stage() ;
+            calendarStage.setScene(s);
+            calendarStage.show();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }   
+        }
 
     @FXML
     void quitter(ActionEvent event) {

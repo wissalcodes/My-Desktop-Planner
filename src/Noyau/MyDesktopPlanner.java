@@ -152,4 +152,13 @@ public class MyDesktopPlanner {
             //proposition du système.
         }
     }  
+
+    public void afficherListeUtilisateur(){
+        Iterator<Utilisateur> it = listUtilisateurs.iterator() ;
+        System.out.println("La liste des utilisateurs du planner : ");
+        while(it.hasNext()){
+            System.out.println(it.next().getPseudo());
+        }
+
+    }
 }
