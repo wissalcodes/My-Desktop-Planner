@@ -5,7 +5,7 @@ public class Tache {
         return "Tache [catégorie=" + catégorie + ", deadlineDate=" + deadlineDate + ", deadlineHeure=" + deadlineHeure
                 + ", priorité=" + priorité + ", durée=" + durée + ", nom=" + nom + ", etat=" + etat + "]";
     }
-    public Tache(Catégorie catégorie, LocalDate deadlineDate, LocalTime deadlineHeure, Priorité priorité, int durée,
+    public Tache(Catégorie catégorie, LocalDate deadlineDate, LocalTime deadlineHeure, Priorité priorité, long durée,
             String nom) {
         this.catégorie = catégorie;
         this.deadlineDate = deadlineDate;
@@ -18,7 +18,7 @@ public class Tache {
     protected LocalDate deadlineDate;
     protected LocalTime deadlineHeure;
     protected Priorité priorité;
-    protected int durée;
+    protected long durée;
     protected String nom;
     protected EtatTache etat = EtatTache.UNSCHEDULED; 
 
@@ -34,10 +34,10 @@ public class Tache {
     public void setNom(String nom) {
         this.nom = nom;
     }
-    public int getDurée() {
+    public long getDurée() {
         return durée;
     }
-    public void setDurée(int durée) {
+    public void setDurée(long durée) {
         this.durée = durée;
     }
     public Priorité getPriorité() {

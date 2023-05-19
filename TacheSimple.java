@@ -1,7 +1,7 @@
 import java.util.Date;
 import java.time.* ; 
 public class TacheSimple extends Tache {
-    public TacheSimple(Catégorie catégorie, LocalDate deadlineDate, LocalTime deadlineHeure, Priorité priorité, int durée, String nom, int période) {
+    public TacheSimple(Catégorie catégorie, LocalDate deadlineDate, LocalTime deadlineHeure, Priorité priorité, long durée, String nom, int période) {
         super(catégorie,deadlineDate,deadlineHeure,priorité,durée,nom);
         this.période = période;
     }

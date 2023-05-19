@@ -204,11 +204,11 @@ public class Utilisateur {
         Journée journée = calendrierPerso.getJournéeByDate(dateJournée);
         Iterator iteratorTaches = listTaches.iterator(); //itérer les journées 
         //tant qu'il reste des taches à planifier dans le planning,
-   
+        
         while (iteratorTaches.hasNext()) {
             Tache tache = (Tache) iteratorTaches.next();        
             Iterator<Journée> iteratorJournéesPlanning = planning.getJournéesPlanifiées().iterator();
-        
+            System.out.println(tache);
             while (iteratorJournéesPlanning.hasNext() && tache.getEtat() == EtatTache.UNSCHEDULED) {
                  journée = iteratorJournéesPlanning.next();
                 TreeSet<Creneau> listCreneauxLibres = journée.getListCreneauxLibres();
@@ -253,6 +253,27 @@ public class Utilisateur {
                     iteratorTaches.remove();// Supprimer la tache depuis la liste
                             break; // Quitter la boucle une fois la tache est programmée
                         } 
+                        else{  
+                            //la durée de créneau est inférieure à celle de la tache à programmer
+                            if(tache instanceof TacheDécomposable){ //si la tache est décomposable
+                                TacheDécomposable tacheDecomposable = (TacheDécomposable) tache;
+                                // on extrait une sous tache de la meme durée que le créneau
+                                TacheSimple sousTache = new TacheSimple(tache.catégorie, tache.getDeadlineDate(), tache.deadlineHeure, tache.getPriorité(), durationMinutes,tache.getNom()+(tacheDecomposable.getListeSousTaches().size()+1),0); 
+                                sousTache.setEtat(EtatTache.NOTREALIZED);
+                                tacheDecomposable.ajouterSousTache(sousTache);
+                                CreneauTache creneauTache = new CreneauTache(creneauLibre, sousTache);
+                               journée.getListCreneauxTaches().add(creneauTache);
+                               System.out.println("Hada l creneau li dit: " + creneauTache);
+                               //MàJ des créneaux libres de la journée
+                               iteratorCréneauxLibres.remove();
+                               tache.setEtat(EtatTache.NOTREALIZED);
+                               if(tache.getDurée()- durationMinutes > 0){
+                                   TacheDécomposable tacheRestante = new TacheDécomposable(tache.catégorie, tache.getDeadlineDate(), tache.deadlineHeure, tache.getPriorité(), tache.getDurée() - durationMinutes,tache.getNom()+(tacheDecomposable.getListeSousTaches().size()+1)); 
+                                 System.out.println("Mazalet la tache, zid hada" + tacheRestante);
+                                   listTaches.add(tacheRestante);
+                                }
+                            }
+                        }
                     } else {
                         System.out.println("Le deadline de cette tache a été dépassé");
                     }
@@ -351,13 +372,16 @@ public class Utilisateur {
                TacheSimple tache2 = new TacheSimple(c2,date2,time2,Priorité.HIGH,100,"Tache2",0);
                TacheSimple tache3 = new TacheSimple(c2,date3,time3,Priorité.HIGH,100,"Tache3",0);
                TacheSimple tache4 = new TacheSimple(c2,date4,time4,Priorité.MEDIUM,100,"Tache4",0);
+               TacheDécomposable tache5 = new TacheDécomposable(c2,LocalDate.parse("2023-05-30"),time3,Priorité.LOW,200,"Tache5");
                listTaches.add(tache1);
                listTaches.add(tache2);
                listTaches.add(tache3);
-               listTaches.add(tache4);    
+               listTaches.add(tache4);
+               listTaches.add(tache5);    
                planifierEnsembleTaches(planning, listTaches);
-               getCalendrierPerso().journéesCalendrier.addAll(planning.getJournéesPlanifiées());
-               //proposition du système.
+                //Accepter le planning / refuser le planning / modifier le planning
+                //getCalendrierPerso().journéesCalendrier.addAll(planning.getJournéesPlanifiées());
+                //proposition du système.
             }
             catch(DateDébutException e){
                 System.out.println("> Erreur: la date de début planning est antérieure à la date du jour!");
