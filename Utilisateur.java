@@ -183,10 +183,26 @@ public class Utilisateur {
             Iterator iterator = journée.getListCreneauxTaches().iterator();
             while (iterator.hasNext()) {
                 CreneauTache creneauTache = (CreneauTache) iterator.next();
-                if (creneauTache.getCreneau().contientCreneau(creneau)) {
+                if (hasIntersection(creneauTache.getCreneau(), creneau)) {
                     System.out.println(
-                            "Impossible de programmer la tache dans ce créneau, car il est réservé pour une deuxième tache");
-                    break;
+                            "Impossible de programmer la tache dans ce créneau, car il est réservé pour une deuxième tache.\n1. L'ajouter à la liste des taches non-planifiées.\n2. Planifier dans un autre créneau");
+                    int option = Integer.parseInt(scanner1.nextLine());
+                    if (option == 1) {
+                        listeTachesUnscheduled.add(tache);
+                        break;
+                    } else if (option == 2) {
+                        Scanner scanner = new Scanner(System.in);
+                        System.out.println("Introduisez la journée yyyy-mm-dd: ");
+                        String dateTacheString = scanner.nextLine();
+                        LocalDate dateTache = LocalDate.parse(dateTacheString);
+                        System.out.println("Introduisez l'heure début du créneau souhaité: HH:mm");
+                        String creneauString = scanner1.nextLine();
+                        LocalTime heureDebut = LocalTime.parse(creneauString);
+                        LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
+                        creneau = new Creneau(heureDebut, heureFin);
+                        planifierTacheManuelle(tacheDate, creneau, tache);
+                        break;
+                    }
                 }
             }
             System.out.println("Souhaitez vous bloquer ce créneau pour cette tache? (1/0)"); // le créneau ne sera
@@ -294,7 +310,7 @@ public class Utilisateur {
                                 planning.getJournéesPlanifiées().add(journée);
                             }
                             // Marquer la tache comme non réalisée
-                            tache.setEtat(EtatTache.NOTREALIZED);
+                            tache.setEtat(EtatTache.INPROGRESS);
                             iteratorTaches.remove();// Supprimer la tache depuis la liste
                             break; // Quitter la boucle une fois la tache est programmée
                         } else {
@@ -308,7 +324,7 @@ public class Utilisateur {
                                             tache.deadlineHeure, tache.getPriorité(), durationMinutes,
                                             tache.getNom() + (tacheDecomposable.getListeSousTaches().size() + 1), 0);
                                     // MAJ de son état
-                                    sousTache.setEtat(EtatTache.NOTREALIZED);
+                                    sousTache.setEtat(EtatTache.INPROGRESS);
                                     // ajouter la sous-tache à la liste des sous taches de la tache décomposable
                                     tacheDecomposable.ajouterSousTache(sousTache);
                                     tacheDecomposable.setDurée(tacheDecomposable.getDurée() - sousTache.getDurée());
@@ -324,10 +340,10 @@ public class Utilisateur {
                                     TacheSimple sousTache = new TacheSimple(tache.catégorie, tache.getDeadlineDate(),
                                             tache.deadlineHeure, tache.getPriorité(), tache.getDurée(),
                                             tache.getNom() + (tacheDecomposable.getListeSousTaches().size() + 1), 0);
-                                    sousTache.setEtat(EtatTache.NOTREALIZED);
+                                    sousTache.setEtat(EtatTache.INPROGRESS);
                                     CreneauTache creneauTache = new CreneauTache(creneauLibre, sousTache);
                                     // Programmation de la sous-tache
-                                    tache.setEtat(EtatTache.NOTREALIZED);
+                                    tache.setEtat(EtatTache.INPROGRESS);
                                     journée.getListCreneauxTaches().add(creneauTache);
                                     planning.getJournéesPlanifiées().add(journée);
                                     iteratorCréneauxLibres.remove();
@@ -341,7 +357,7 @@ public class Utilisateur {
                         System.out.println("Le deadline de cette tache a été dépassé");
                     }
                 }
-                if (tache.getEtat() == EtatTache.NOTREALIZED) {
+                if (tache.getEtat() == EtatTache.INPROGRESS) {
                     lastDateWithTask = journée.getDate();
                     break; // Quitter la boucle si la tache a été programmée
                 }
@@ -403,7 +419,7 @@ public class Utilisateur {
 
     public void planifier() {
         System.out.println(
-                "Choisissez une option:\n1. Planification manuelle d'une tache\n2. Planification d'un ensemble de taches\n3. Planification d'une tache avant une date limite");
+                "Choisissez une option:\n1. Planification manuelle d'une tache\n2. Planification d'un ensemble de taches\n3. Planification d'une tache avant une date limite\n4. Planifier un projet");
         Scanner scanner1 = new Scanner(System.in);
         // dans la planification d'un ensemble de taches, on a automatique et manuel.
         int option = Integer.parseInt(scanner1.nextLine());
@@ -432,7 +448,6 @@ public class Utilisateur {
             Catégorie categorie = new Catégorie(categorieTache, new Color(0, 0, 0));
             TacheSimple tache = new TacheSimple(categorie, dateLimite, heureLimite, priorite, dureeTache, nomTache,
                     0);
-            System.out.println(tache);
             // demander le créneau:
             System.out.println("Introduisez la journée yyyy-mm-dd: ");
             String dateTacheString = scanner.nextLine();
@@ -512,6 +527,56 @@ public class Utilisateur {
                     0);
             planifierTacheAvantDateLimite(tache3, LocalDate.parse("2023-05-21"));
         }
+        if (option == 4) {
+            ArrayList<Tache> listeTachesProjet = new ArrayList<>();
+
+            System.out.println("\nIntroduisez les informations du projet:\n > Nom projet: ");
+            Scanner scanner = new Scanner(System.in);
+            String nomProjet = scanner.nextLine();
+
+            System.out.println("> Description du projet: ");
+            String description = scanner.nextLine();
+
+            System.out.println("> Taches du projet (tapez stop pour quitter la saisie)");
+
+            System.out.println("Entrez le nom de la tache:");
+            String nomTache = scanner.nextLine();
+            if (nomTache == "stop") {
+
+                System.out.println("Entrez la durée de la tache (en minutes):");
+                int dureeTache = Integer.parseInt(scanner.nextLine());
+
+                System.out.println("Entrez la priorité de la tache (HIGH, MEDIUM, ou LOW):");
+                String prioriteTache = scanner.nextLine();
+                Priorité priorite = Priorité.valueOf(prioriteTache);
+
+                System.out.println("Entrez la date limite de la tache (format: aaaa-mm-jj):");
+                String dateLimiteString = scanner.nextLine();
+                LocalDate dateLimite = LocalDate.parse(dateLimiteString);
+
+                System.out.println("Entrez l'heure limite de la tache (format: hh:mm:ss):");
+                String heureLimiteString = scanner.nextLine();
+                LocalTime heureLimite = LocalTime.parse(heureLimiteString);
+
+                System.out.println("Entrez la catégorie de la tache (STUDIES, WORK, COOKING..):");
+                String categorieTache = scanner.nextLine();
+                Catégorie categorie = new Catégorie(categorieTache, new Color(0, 0, 0));
+                TacheSimple tache = new TacheSimple(categorie, dateLimite, heureLimite, priorite, dureeTache, nomTache,
+                        0);
+                listeTachesProjet.add(tache);
+            } else {
+                Planning planning = new Planning();
+                try {
+                    planning = this.fixerPériodePlanning();
+                } catch (DateDébutException e) {
+                    System.out.println("> Erreur: la date de début planning est antérieure à la date du jour!");
+                    planifier();
+                }
+                Projet projet = new Projet(nomProjet, description, listeTachesProjet);
+                planifierProjet(planning, projet);
+                historiqueProjets.add(projet);
+            }
+        }
     }
 
     // Planification automatique d'une tache
@@ -568,7 +633,7 @@ public class Utilisateur {
                             planning.getJournéesPlanifiées().add(journée);
                         }
                         // Marquer la tache comme non réalisée
-                        tache.setEtat(EtatTache.NOTREALIZED);
+                        tache.setEtat(EtatTache.INPROGRESS);
 
                         break; // Quitter la boucle une fois la tache est programmée
                     } else {
@@ -582,7 +647,7 @@ public class Utilisateur {
                                         tache.deadlineHeure, tache.getPriorité(), durationMinutes,
                                         tache.getNom() + (tacheDecomposable.getListeSousTaches().size() + 1), 0);
                                 // MAJ de son état
-                                sousTache.setEtat(EtatTache.NOTREALIZED);
+                                sousTache.setEtat(EtatTache.INPROGRESS);
                                 // ajouter la sous-tache à la liste des sous taches de la tache décomposable
                                 tacheDecomposable.ajouterSousTache(sousTache);
                                 tacheDecomposable.setDurée(tacheDecomposable.getDurée() - sousTache.getDurée());
@@ -598,10 +663,10 @@ public class Utilisateur {
                                 TacheSimple sousTache = new TacheSimple(tache.catégorie, tache.getDeadlineDate(),
                                         tache.deadlineHeure, tache.getPriorité(), tache.getDurée(),
                                         tache.getNom() + (tacheDecomposable.getListeSousTaches().size() + 1), 0);
-                                sousTache.setEtat(EtatTache.NOTREALIZED);
+                                sousTache.setEtat(EtatTache.INPROGRESS);
                                 CreneauTache creneauTache = new CreneauTache(creneauLibre, sousTache);
                                 // Programmation de la sous-tache
-                                tache.setEtat(EtatTache.NOTREALIZED);
+                                tache.setEtat(EtatTache.INPROGRESS);
                                 journée.getListCreneauxTaches().add(creneauTache);
                                 planning.getJournéesPlanifiées().add(journée);
                                 iteratorCréneauxLibres.remove();
@@ -642,5 +707,40 @@ public class Utilisateur {
                 System.out.println("Tache programmée avec succès.");
             }
         }
+    }
+
+    public void planifierProjet(Planning planning, Projet projet) {
+        ArrayList<Tache> listeTachesProjet = new ArrayList<>(null);
+        listeTachesProjet = projet.getListeTaches();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(
+                "1. Planification manuelle des taches du projet\n2. Planification automatique des taches du projet");
+        int option = Integer.parseInt(scanner.nextLine());
+        if (option == 1) { // Planification manuelle des taches du projet
+            Iterator iterator = listeTachesProjet.iterator();
+            while (iterator.hasNext()) {
+                TacheSimple tache = (TacheSimple) iterator.next();
+                System.out.println("Introduisez la journée yyyy-mm-dd: ");
+                String dateTacheString = scanner.nextLine();
+                LocalDate dateTache = LocalDate.parse(dateTacheString);
+                System.out.println("Introduisez l'heure début du créneau souhaité: HH:mm");
+                String creneauString = scanner.nextLine();
+                LocalTime heureDebut = LocalTime.parse(creneauString);
+                LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
+                Creneau creneau = new Creneau(heureDebut, heureFin);
+                planifierTacheManuelle(dateTache, creneau, tache);
+
+            }
+        } else if (option == 2) { // Planification automatique des taches du projet
+            planifierEnsembleTaches(planning, listeTachesProjet);
+        }
+
+    }
+
+    public boolean hasIntersection(Creneau creneau1, Creneau creneau2) {
+        return creneau1.getHeureDebut().isBefore(creneau2.getHeureFin())
+                && creneau1.getHeureFin().isAfter(creneau2.getHeureDebut()) ||
+                creneau1.getHeureDebut().equals(creneau2.getHeureFin())
+                || creneau1.getHeureFin().equals(creneau2.getHeureDebut());
     }
 }
