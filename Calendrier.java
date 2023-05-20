@@ -1,5 +1,5 @@
-import java.util.* ;
-import java.time.* ; 
+import java.util.*;
+import java.time.*;
 
 public class Calendrier {
     TreeSet<Journée> journéesCalendrier = new TreeSet<>(); //
@@ -7,7 +7,7 @@ public class Calendrier {
     public void afficherCalendrier() {
         System.out.println(journéesCalendrier);
     }
-    
+
     public TreeSet<Journée> getJournéesCalendrier() {
         return journéesCalendrier;
     }
@@ -20,12 +20,13 @@ public class Calendrier {
     public String toString() {
         return "\n\t\t\t\t\t***Calendrier***\n" + journéesCalendrier;
     }
+
     LocalDate currentDate = LocalDate.now();
     int currentMonth = currentDate.getMonthValue();
     int currentYear = currentDate.getYear();
     int currentDay = currentDate.getDayOfMonth();
 
-    public Calendrier(){
+    public Calendrier() {
         int day = 1;
         int month = currentMonth;
         int year = currentYear;
