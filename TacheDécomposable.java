@@ -1,7 +1,8 @@
 import java.util.*;
+import java.io.Serializable;
 import java.time.*;
 
-public class TacheDécomposable extends Tache {
+public class TacheDécomposable extends Tache implements Serializable {
     private List<TacheSimple> listeSousTaches = new ArrayList<>();
 
     public List<TacheSimple> getListeSousTaches() {

@@ -1,2 +1,4 @@
-public class UtilisateurIntrouvableException extends Exception{
+import java.io.Serializable;
+
+public class UtilisateurIntrouvableException extends Exception implements Serializable {
 }

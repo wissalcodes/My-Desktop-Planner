@@ -1,11 +1,13 @@
 import java.util.*;
 import java.awt.Color;
+import java.io.Serializable;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
-public class Utilisateur {
+public class Utilisateur implements Serializable {
     private String pseudo;
     protected static int nbMinTaches = 1;
+    private MyDesktopPlanner planner;
     private Set<Planning> historiquePlannings = new TreeSet<>();
     protected Set<Catégorie> listeCatégories = new HashSet<>();
     protected List<Tache> listeTachesUnscheduled = new ArrayList<>();
@@ -34,10 +36,12 @@ public class Utilisateur {
     private List<Catégorie> listCatégories;
 
     public Utilisateur(String pseudo) {
-        // listCatégories.add(new Catégorie("STUDIES", null));
-        // listCatégories.add(new Catégorie("WORK", null));
-        // listCatégories.add(new Catégorie("COOKING", null));
         this.pseudo = pseudo;
+        planner = new MyDesktopPlanner();
+    }
+
+    public void setPlanner(MyDesktopPlanner planner) {
+        this.planner = planner;
     }
 
     // getters and setters
@@ -91,19 +95,14 @@ public class Utilisateur {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
-        if (getClass() != obj.getClass())
-            return false;
+        }
         Utilisateur other = (Utilisateur) obj;
-        if (pseudo == null) {
-            if (other.pseudo != null)
-                return false;
-        } else if (!pseudo.equals(other.pseudo))
-            return false;
-        return true;
+        return Objects.equals(pseudo, other.pseudo);
     }
 
     public Planning fixerPériodePlanning() throws DateDébutException {
@@ -168,6 +167,7 @@ public class Utilisateur {
         } else {
             System.out.println("Option invalide.");
         }
+        planner.updateUser(this);
         return planning;
     }
 
@@ -238,7 +238,7 @@ public class Utilisateur {
                 }
             }
         }
-
+        planner.updateUser(this);
         return (journée);
     }
 
@@ -401,6 +401,7 @@ public class Utilisateur {
             // afficher et retourner le planning proposé par le système
             System.out.println("\n\nPlanning proposé " + planning);
         }
+        planner.updateUser(this);
         return (planning);
     }
 
@@ -499,24 +500,6 @@ public class Utilisateur {
             if (option == 2) {
                 System.out.println("Planning supprimé avec succès.");
             }
-            // Not yet.
-            // if(option ==3){
-            // System.out.println("*****Modification du planning*****");
-            // System.out.println("1. Permuter entre 2 taches\n2. Changer le créneau d'une
-            // tache");
-            // option = Integer.parseInt(scanner1.nextLine());
-            // if(option==1){
-
-            // }if(option==2){
-
-            // }else{
-            // System.out.println("choix invalide");
-            // }
-
-            // }
-            // getCalendrierPerso().journéesCalendrier.addAll(planning.getJournéesPlanifiées());
-            // proposition du système.
-
         }
         if (option == 3) { // Planification d'une tache avant une date limite
             TacheSimple tache3 = new TacheSimple(new Catégorie("kk", new Color(0, 0, 0)),
@@ -574,6 +557,7 @@ public class Utilisateur {
                 historiqueProjets.add(projet);
             }
         }
+        planner.updateUser(this);
     }
 
     // Planification automatique d'une tache
@@ -704,6 +688,7 @@ public class Utilisateur {
                 System.out.println("Tache programmée avec succès.");
             }
         }
+        planner.updateUser(this);
     }
 
     public void planifierProjet(Planning planning, Projet projet) {
@@ -731,6 +716,7 @@ public class Utilisateur {
         } else if (option == 2) { // Planification automatique des taches du projet
             planifierEnsembleTaches(planning, listeTachesProjet);
         }
+        planner.updateUser(this);
 
     }
 

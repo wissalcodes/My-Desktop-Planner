@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
-public class Planning implements Comparable<Planning> {
+public class Planning implements Comparable<Planning>, Serializable {
     public Planning(LocalDate dateDébut, LocalDate dateFin, TreeSet<Journée> journéesPlanifiées) {
         this.dateDébut = dateDébut;
         this.dateFin = dateFin;

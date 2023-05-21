@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.time.*;
 
-public class Tache {
+public class Tache implements Serializable {
     @Override
     public String toString() {
         return "Tache [catégorie=" + catégorie + ", deadlineDate=" + deadlineDate + ", deadlineHeure=" + deadlineHeure

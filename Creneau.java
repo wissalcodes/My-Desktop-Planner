@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class Creneau implements Comparable<Creneau> {
+public class Creneau implements Serializable, Comparable<Creneau> {
     private LocalTime heureDebut;
     private LocalTime heureFin;
 

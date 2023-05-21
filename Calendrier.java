@@ -1,7 +1,8 @@
 import java.util.*;
 import java.time.*;
+import java.io.Serializable;
 
-public class Calendrier {
+public class Calendrier implements Serializable {
     TreeSet<Journée> journéesCalendrier = new TreeSet<>(); //
 
     public void afficherCalendrier() {

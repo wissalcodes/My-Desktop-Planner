@@ -1,4 +1,6 @@
-public class CreneauTache {
+import java.io.Serializable;
+
+public class CreneauTache implements Serializable, Comparable<CreneauTache> {
 
     private Creneau creneau;
     private TacheSimple tache;
@@ -41,5 +43,10 @@ public class CreneauTache {
     @Override
     public String toString() {
         return "CreneauTache [creneau=" + creneau + ", tache=" + tache + ", estBloqué=" + estBloqué + "]";
+    }
+
+    @Override
+    public int compareTo(CreneauTache other) {
+        return this.getCreneau().getHeureDebut().compareTo(other.getCreneau().getHeureDebut());
     }
 }

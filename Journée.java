@@ -1,9 +1,9 @@
 import java.time.LocalDate;
 import java.util.*;
-
+import java.io.Serializable;
 import javax.imageio.ImageTranscoder;
 
-public class Journée implements Comparable<Journée> {
+public class Journée implements Comparable<Journée>, Serializable {
     public Journée(LocalDate date) {
         this.date = date;
     }
@@ -12,8 +12,7 @@ public class Journée implements Comparable<Journée> {
     }
 
     private LocalDate date; // Date de la journée sous le format aaaa-mm-jj
-    private TreeSet<CreneauTache> listCreneauxTaches = new TreeSet<>(
-            Comparator.comparing(CreneauTache::getCreneau, Comparator.comparing(Creneau::getHeureDebut)));
+    private TreeSet<CreneauTache> listCreneauxTaches = new TreeSet<>();
     private Badge badgeJournalier;
     private int nbTachesPrévues;
     private int nbTachesRéalisées;

@@ -1,22 +1,59 @@
 import java.util.*;
 import java.awt.Color;
+import java.io.*;
 import org.w3c.dom.css.RGBColor;
 import java.time.*;
 
-public class MyDesktopPlanner {
+public class MyDesktopPlanner implements Serializable {
+    private static final String fileName = "Users.dat";
+    private ArrayList<Utilisateur> listUtilisateurs = new ArrayList<>();
 
-    private Set<Utilisateur> listUtilisateurs = new HashSet<>();
+    public void chargerUtilisateursFichier() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
+            listUtilisateurs = (ArrayList<Utilisateur>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error loading users from file: " + e.getMessage());
+        }
+    }
+
+    public void updateUser(Utilisateur updatedUser) {
+        int index = signedUp(updatedUser.getPseudo());
+        if (index != -1) {
+            listUtilisateurs.set(index, updatedUser);
+            sauvegarderUtilisateursFichier(); // Save the updated users list to the file
+        } else {
+            System.err.println("Invalid index for user update.");
+        }
+    }
+
+    public int signedUp(String pseudo) {
+        for (int i = 0; i < listUtilisateurs.size(); i++) {
+            if (listUtilisateurs.get(i).getPseudo().equals(pseudo)) {
+                return i;
+            }
+        }
+        return -1; // Return -1 if user not found
+    }
+
+    public void sauvegarderUtilisateursFichier() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            oos.writeObject(listUtilisateurs);
+            System.out.println("Sauvegardé");
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la sauvegarde des utilisateurs" + e.getMessage());
+        }
+    }
 
     @Override
     public String toString() {
         return "MyDesktopPlanner [listUtilisateurs=" + listUtilisateurs + "]";
     }
 
-    public Set<Utilisateur> getListUtilisateurs() {
+    public ArrayList<Utilisateur> getListUtilisateurs() {
         return listUtilisateurs;
     }
 
-    public void setListUtilisateurs(Set<Utilisateur> listUtilisateurs) {
+    public void setListUtilisateurs(ArrayList<Utilisateur> listUtilisateurs) {
         this.listUtilisateurs = listUtilisateurs;
     }
 
@@ -25,29 +62,21 @@ public class MyDesktopPlanner {
     }
 
     public void ajouterUtilisateur(Utilisateur utilisateur) {
-        if (rechercheUtilisateur(utilisateur.getPseudo())) {
-            System.out.println(
-                    "Utilisateur créé avec succès.\nIntroduisez les catégories souhaitées, suivies de leur couleur (au format RGB séparé par des virgules). Tapez 'stop' pour arrêter la saisie.");
-            Scanner scanner = new Scanner(System.in);
-            String categorieNom;
-            do {
-                System.out.print("Nom de la catégorie : ");
-                categorieNom = scanner.nextLine();
-                if (!categorieNom.equalsIgnoreCase("stop")) {
-                    System.out.print("Couleur de la catégorie (au format RGB séparé par des virgules) : ");
-                    String[] rgbString = scanner.nextLine().split(",");
-                    int r = Integer.parseInt(rgbString[0].trim());
-                    int g = Integer.parseInt(rgbString[1].trim());
-                    int b = Integer.parseInt(rgbString[2].trim());
-                    Color couleur = new Color(r, g, b);
-                    Catégorie categorie = new Catégorie(categorieNom, couleur);
-                    utilisateur.listeCatégories.add(categorie);
-                }
-            } while (!categorieNom.equalsIgnoreCase("stop"));
-            listUtilisateurs.add(utilisateur);
+        boolean userExists = false;
+        for (Utilisateur existingUser : listUtilisateurs) {
+            if (existingUser.getPseudo().equals(utilisateur.getPseudo())) {
+                userExists = true;
+                break;
+            }
+        }
 
+        if (!userExists) {
+            utilisateur.setPlanner(this);
+            listUtilisateurs.add(utilisateur);
+            sauvegarderUtilisateursFichier(); // Save the updated users list to the file
+            System.out.println("Utilisateur créé avec succès.");
         } else {
-            System.out.println("Un utilisateur avec ce pseudo existe déjà.\nVeuillez resaisir un pseudo");
+            System.out.println("Un utilisateur avec ce pseudo existe déjà.\nVeuillez ressaisir un pseudo.");
         }
     }
 
@@ -76,5 +105,4 @@ public class MyDesktopPlanner {
             return (null);
         }
     }
-
 }
