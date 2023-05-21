@@ -2,13 +2,13 @@ import java.util.*;
 import java.time.*;
 
 public class TacheDécomposable extends Tache {
-    private List<Tache> listeSousTaches = new ArrayList<>();
+    private List<TacheSimple> listeSousTaches = new ArrayList<>();
 
-    public List<Tache> getListeSousTaches() {
+    public List<TacheSimple> getListeSousTaches() {
         return listeSousTaches;
     }
 
-    public void setListeSousTaches(List<Tache> listeSousTaches) {
+    public void setListeSousTaches(List<TacheSimple> listeSousTaches) {
         this.listeSousTaches = listeSousTaches;
     }
 
@@ -19,5 +19,17 @@ public class TacheDécomposable extends Tache {
 
     public void ajouterSousTache(TacheSimple tache) {
         listeSousTaches.add(tache);
+    }
+
+    public EtatTache évaluerTache() {
+        Iterator<TacheSimple> iterator = listeSousTaches.iterator();
+        EtatTache état = EtatTache.COMPLETED;
+        while (iterator.hasNext()) {
+            Tache tache = (Tache) iterator.next();
+            if (tache.getEtat() != EtatTache.COMPLETED) {
+                return (EtatTache.INPROGRESS);
+            }
+        }
+        return (état);
     }
 }

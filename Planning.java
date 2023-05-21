@@ -11,17 +11,11 @@ public class Planning implements Comparable<Planning> {
     public Planning() {
     }
 
-    // public Journée getJournéeByDate(LocalDate date) {
-    // for (Journée journée : journéesCalendrier) {
-    // if (journée.getDate().equals(date)) {
-    // return journée;
-    // }
-    // }
-    // return null;
-    // }
     private LocalDate dateDébut;
     private LocalDate dateFin;
     private TreeSet<Journée> journéesPlanifiées;
+    private int nbBadges[]; // nombre de badge GOOD[0],VERYGOOD[1],EXCELLENT[2] obtenus pendant le planning
+    private int nbEncouragement;
 
     public LocalDate getDateDébut() {
         return dateDébut;
@@ -56,5 +50,54 @@ public class Planning implements Comparable<Planning> {
     @Override
     public int compareTo(Planning other) {
         return this.dateDébut.compareTo(other.getDateDébut());
+    }
+
+    public void consulterBadgesPlanning() {
+        Iterator<Journée> iterator = journéesPlanifiées.iterator();
+        while (iterator.hasNext()) {
+            Journée j = iterator.next();
+            if (j.getBadgeJournalier() == Badge.GOOD) {
+                nbBadges[0]++;
+            }
+            if (j.getBadgeJournalier() == Badge.VERYGOOD) {
+                nbBadges[1]++;
+            }
+            if (j.getBadgeJournalier() == Badge.EXCELLENT) {
+                nbBadges[2]++;
+            }
+        }
+    }
+
+    public double moyenneRendementJournalier() {
+        Iterator<Journée> iterator = journéesPlanifiées.iterator();
+        double sum = 0;
+        while (iterator.hasNext()) {
+            Journée j = iterator.next();
+            sum += j.rendementJournalier();
+        }
+        return (sum / journéesPlanifiées.size());
+    }
+
+    public int nbEncouragementsSystème() {
+        Iterator<Journée> iterator = journéesPlanifiées.iterator();
+        int sum = 0;
+        while (iterator.hasNext()) {
+            Journée j = iterator.next();
+            if (j.getNbTachesRéalisées() > j.getNbTachesPrévues()) {
+                sum++;
+            }
+        }
+        return (sum);
+    }
+
+    public void consulterPlanning() {
+        consulterBadgesPlanning();
+        Iterator<Journée> iterator = journéesPlanifiées.iterator();
+        int sum = 0;
+        while (iterator.hasNext()) {
+            Journée j = iterator.next();
+            sum += j.getNbTachesRéalisées();
+        }
+        System.out.println("Nombre de taches réalisées dans le planning: " + sum);
     }
 }
