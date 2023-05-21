@@ -1,10 +1,9 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Projet {
     private String nom;
     private String description;
-    private ArrayList<Tache> listeTaches;
+    private ArrayList<Tache> listeTaches = new ArrayList<>();
 
     public Projet(String nom, String description, ArrayList<Tache> listeTaches) {
         this.nom = nom;
@@ -34,6 +33,18 @@ public class Projet {
 
     public void setListeTaches(ArrayList<Tache> listeTaches) {
         this.listeTaches = listeTaches;
+    }
+
+    public EtatTache évaluerProjet() {
+        Iterator<Tache> iterator = listeTaches.iterator();
+        EtatTache état = EtatTache.COMPLETED;
+        while (iterator.hasNext()) {
+            Tache tache = (Tache) iterator.next();
+            if (tache.getEtat() != EtatTache.COMPLETED) {
+                return (EtatTache.INPROGRESS);
+            }
+        }
+        return (état);
     }
 
     @Override

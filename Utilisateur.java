@@ -1,14 +1,11 @@
 import java.util.*;
-
-import javax.swing.event.ListDataEvent;
-
 import java.awt.Color;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class Utilisateur {
     private String pseudo;
-    private int nbMinTaches = 1;
+    protected static int nbMinTaches = 1;
     private Set<Planning> historiquePlannings = new TreeSet<>();
     protected Set<Catégorie> listeCatégories = new HashSet<>();
     protected List<Tache> listeTachesUnscheduled = new ArrayList<>();
@@ -742,5 +739,13 @@ public class Utilisateur {
                 && creneau1.getHeureFin().isAfter(creneau2.getHeureDebut()) ||
                 creneau1.getHeureDebut().equals(creneau2.getHeureFin())
                 || creneau1.getHeureFin().equals(creneau2.getHeureDebut());
+    }
+
+    public void consulterHistoriquePlannings() {
+        Iterator<Planning> iterator = historiquePlannings.iterator();
+        while (iterator.hasNext()) {
+            Planning planning = (Planning) iterator.next();
+            planning.consulterPlanning();
+        }
     }
 }

@@ -1,6 +1,8 @@
 import java.time.LocalDate;
 import java.util.*;
 
+import javax.imageio.ImageTranscoder;
+
 public class Journée implements Comparable<Journée> {
     public Journée(LocalDate date) {
         this.date = date;
@@ -73,6 +75,43 @@ public class Journée implements Comparable<Journée> {
     @Override
     public int compareTo(Journée o) {
         return this.date.compareTo(o.date);
+    }
+
+    void introduireEtatsTaches() {
+        Iterator iterator = listCreneauxTaches.iterator();
+        while (iterator.hasNext()) {
+            CreneauTache creneauTache = (CreneauTache) iterator.next();
+            Tache tache = creneauTache.getTache();
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("** Etat de réalisation de la tache: " + tache.getNom());
+            String étatString = scanner.nextLine();
+
+            EtatTache etat = EtatTache.valueOf(étatString);
+            if (etat == EtatTache.COMPLETED) {
+                nbTachesRéalisées++;
+            }
+            tache.setEtat(etat);
+        }
+        if (nbTachesRéalisées / Utilisateur.nbMinTaches >= 5) {
+            badgeJournalier = Badge.GOOD;
+        }
+        if (nbTachesRéalisées / Utilisateur.nbMinTaches >= 15) {
+            badgeJournalier = Badge.VERYGOOD;
+        }
+        if (nbTachesRéalisées / Utilisateur.nbMinTaches >= 45) {
+            badgeJournalier = Badge.VERYGOOD;
+        }
+        félicitation();
+    }
+
+    public double rendementJournalier() {
+        return (nbTachesRéalisées / nbTachesPrévues);
+    }
+
+    public void félicitation() {
+        if (Utilisateur.nbMinTaches < nbTachesRéalisées) {
+            System.out.println("Félicitations! Vous avez atteint le seuil minimal de taches à accomplir par jour.");
+        }
     }
 
 }
