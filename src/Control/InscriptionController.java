@@ -41,10 +41,10 @@ public class InscriptionController {
         
         if( user == null) { // pseudo non existant deja 
         Calendrier calendrier = new Calendrier() ; // creation du nouveau user 
-        Utilisateur newUser = new Utilisateur(pseudo , calendrier);
+        Utilisateur newUser = new Utilisateur(pseudo);
         planner.getListUtilisateurs().add(newUser) ; 
         ajoutSuccesLabel.setText("Utilisateur ajouté avec succées ! ");
-        planner.afficherListeUtilisateur() ;
+        //planner.afficherListeUtilisateur() ;
       }
       else{ // pseudo deja existant 
         utilisateurExistantAlerte(pseudo);

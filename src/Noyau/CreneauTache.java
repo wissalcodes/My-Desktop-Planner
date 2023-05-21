@@ -40,6 +40,6 @@ public class CreneauTache {
     }
     @Override
     public String toString() {
-        return "CreneauTache [creneau=" + creneau + ", tache=" + tache + ", estBloqué=" + estBloqué + "]";
+        return "CreneauTache [" + creneau + ", " + tache + ", estBloqué=" + estBloqué + "]";
     }
 }

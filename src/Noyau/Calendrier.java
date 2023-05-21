@@ -53,4 +53,14 @@ public class Calendrier {
         }
         return null;
     }
+
+    public void afficherLesJournéePlanifié() {
+        Iterator<Journée> it = journéesCalendrier.iterator();
+        while (it.hasNext()) {
+            Journée journée = it.next();
+            if (! journée.getListCreneauxTaches().isEmpty()) {
+                System.out.println(journée.toString());
+            }
+        }
+    }
 }

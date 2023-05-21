@@ -1,10 +1,12 @@
 package Noyau ;
 
 import java.util.Date;
-import java.time.* ; 
+import java.time.*;
+
 public class TacheSimple extends Tache {
-    public TacheSimple(Catégorie catégorie, LocalDate deadlineDate, LocalTime deadlineHeure, Priorité priorité, int durée, String nom, int période) {
-        super(catégorie,deadlineDate,deadlineHeure,priorité,durée,nom);
+    public TacheSimple(Catégorie catégorie, LocalDate deadlineDate, LocalTime deadlineHeure, Priorité priorité,
+            long durée, String nom, int période) {
+        super(catégorie, deadlineDate, deadlineHeure, priorité, durée, nom);
         this.période = période;
     }
 
@@ -18,7 +20,7 @@ public class TacheSimple extends Tache {
         this.période = période;
     }
 
-    public void afficher(){
+    public void afficher() {
         super.afficher();
         System.out.println("Période: " + période);
     }

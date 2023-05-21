@@ -68,8 +68,12 @@ public class AuthenticationController {
 
         if(existe){
             try{
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/Calendar.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/PlannificationPage.fxml"));
                 Parent root = loader.load() ; 
+                PlanificationPageController controleur = loader.getController() ;
+                controleur.setUtilisateur(planner.getUtilisateurParPseudo(pseudo));
+                 //controleur.initCalendar( planner.getUtilisateurParPseudo(pseudo))  ;
+                //Appleler le constructeur du calendarControlleur pour initialiser la page 
                 Scene s = new Scene(root);
                 Stage calendarStage = new Stage() ;
                 calendarStage.setScene(s);
@@ -85,8 +89,7 @@ public class AuthenticationController {
     }
 
     @FXML
-    void inscrire(ActionEvent event) { //le code d'affichage doit a la fin etre dans une metode a part, des que 
-    // je trouve un moyen de set MyDesctopPlanner dans insricontrolleur sans callendarcontrolleur
+    void inscrire(ActionEvent event) { 
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/Inscription.fxml"));
             Parent root = loader.load() ; 
@@ -111,11 +114,11 @@ public class AuthenticationController {
     public void matriculeNonTrouve(String m) { 
 
         Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Matricule introuvable");
+        alert.setTitle("Pseduo introuvable");
         alert.setHeaderText(null);
 
-        alert.setContentText("le matricule recherché"+ m + " n'existe pas!" + 
-        "Veuillez introduire un autre matricule");
+        alert.setContentText("le pseudo recherché "+ m + " n'existe pas!" + 
+        "Veuillez introduire un autre pseudo");
 
         alert.showAndWait();
         }
