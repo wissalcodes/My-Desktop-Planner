@@ -18,7 +18,9 @@ public class Utilisateur implements Serializable {
     protected Set<Catégorie> listeCatégories = new HashSet<>();
     protected List<Tache> listeTachesUnscheduled = new ArrayList<>();
     private static int duréeMinimale = 30;
-
+    public MyDesktopPlanner getPlanner() {
+        return planner;
+    }
     // durée minimale de 30 minutes, sera vérifié lors de la décomposition d'un
     // créneau
     public Set<Catégorie> getListeCatégories() {
