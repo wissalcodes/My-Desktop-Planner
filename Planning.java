@@ -15,8 +15,30 @@ public class Planning implements Comparable<Planning>, Serializable {
     private LocalDate dateDébut;
     private LocalDate dateFin;
     private TreeSet<Journée> journéesPlanifiées;
-    private int nbBadges[]; // nombre de badge GOOD[0],VERYGOOD[1],EXCELLENT[2] obtenus pendant le planning
+    protected int nbBadges[] = { 0, 0, 0 }; // nombre de badge GOOD[0],VERYGOOD[1],EXCELLENT[2] obtenus pendant le
+                                            // planning
+
+    public void setBadge(int i) {
+        nbBadges[i] += 1;
+    }
+
+    public int[] getNbBadges() {
+        return nbBadges;
+    }
+
+    public void setNbBadges(int[] nbBadges) {
+        this.nbBadges = nbBadges;
+    }
+
     private int nbEncouragement;
+
+    public int getNbEncouragement() {
+        return nbEncouragement;
+    }
+
+    public void setNbEncouragement(int nbEncouragement) {
+        this.nbEncouragement = nbEncouragement;
+    }
 
     public LocalDate getDateDébut() {
         return dateDébut;
@@ -45,7 +67,8 @@ public class Planning implements Comparable<Planning>, Serializable {
     @Override
     public String toString() {
         return "Planning [\ndateDébut=" + dateDébut + ",\ndateFin=" + dateFin + ", \njournéesPlanifiées="
-                + journéesPlanifiées + "]";
+                + journéesPlanifiées + "]" + "\nBadges: " + "\nGOOD - " + nbBadges[0] + "\nVERYGOOD - " + nbBadges[1]
+                + "\nEXCELLENT - " + nbBadges[2];
     }
 
     @Override

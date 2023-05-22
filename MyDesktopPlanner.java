@@ -5,7 +5,7 @@ import org.w3c.dom.css.RGBColor;
 import java.time.*;
 
 public class MyDesktopPlanner implements Serializable {
-    private static final String fileName = "Users.dat";
+    private static final String fileName = "fichierDémo.dat";
     private ArrayList<Utilisateur> listUtilisateurs = new ArrayList<>();
 
     public void chargerUtilisateursFichier() {
@@ -98,6 +98,8 @@ public class MyDesktopPlanner implements Serializable {
                 System.out.println("> Utilisateur authentifié avec succès.");
                 System.out.println("            **Calendrier**          ");
                 System.out.println(getUtilisateurParPseudo(pseudo).getCalendrierPerso());
+                System.out.println("            **Mes Plannings**          ");
+                System.out.println(getUtilisateurParPseudo(pseudo).getHitoriqueProjets());
                 return (getUtilisateurParPseudo(pseudo));
             }
         } catch (UtilisateurIntrouvableException e) {

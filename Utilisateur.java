@@ -8,7 +8,12 @@ public class Utilisateur implements Serializable {
     private String pseudo;
     protected static int nbMinTaches = 1;
     private MyDesktopPlanner planner;
-    private Set<Planning> historiquePlannings = new TreeSet<>();
+
+    public MyDesktopPlanner getPlanner() {
+        return planner;
+    }
+
+    protected Set<Planning> historiquePlannings = new TreeSet<>();
     protected Set<Catégorie> listeCatégories = new HashSet<>();
     protected List<Tache> listeTachesUnscheduled = new ArrayList<>();
     private static int duréeMinimale = 30;
@@ -32,7 +37,7 @@ public class Utilisateur implements Serializable {
     }
 
     private List<Projet> historiqueProjets;
-    private Calendrier calendrierPerso = new Calendrier();
+    protected Calendrier calendrierPerso = new Calendrier();
     private List<Catégorie> listCatégories;
 
     public Utilisateur(String pseudo) {
@@ -275,6 +280,7 @@ public class Utilisateur implements Serializable {
                 Iterator<Creneau> iteratorCréneauxLibres = listCreneauxLibres.iterator();
 
                 while (iteratorCréneauxLibres.hasNext()) {
+                    System.out.println("Kayn créneax libres");
                     Creneau creneauLibre = iteratorCréneauxLibres.next();
 
                     if (tache.getDeadlineDate().isAfter(journée.getDate()) ||
@@ -344,7 +350,6 @@ public class Utilisateur implements Serializable {
                                     journée.getListCreneauxTaches().add(creneauTache);
                                     planning.getJournéesPlanifiées().add(journée);
                                     iteratorCréneauxLibres.remove();
-                                    // iteratorTaches.next();
                                     break;
                                 }
 
@@ -419,10 +424,10 @@ public class Utilisateur implements Serializable {
         System.out.println(
                 "Choisissez une option:\n1. Planification manuelle d'une tache\n2. Planification d'un ensemble de taches\n3. Planification d'une tache avant une date limite\n4. Planifier un projet");
         Scanner scanner1 = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         // dans la planification d'un ensemble de taches, on a automatique et manuel.
         int option = Integer.parseInt(scanner1.nextLine());
         if (option == 1) {
-            Scanner scanner = new Scanner(System.in);
             System.out.println("Entrez le nom de la tache:");
             String nomTache = scanner.nextLine();
 
@@ -456,8 +461,8 @@ public class Utilisateur implements Serializable {
             LocalTime heureFin = heureDebut.plusMinutes(dureeTache);
             Creneau creneau = new Creneau(heureDebut, heureFin);
             planifierTacheManuelle(dateTache, creneau, tache);
-        }
-        if (option == 2) {
+        } else if (option == 2) {
+            // Planification d'un ensemble de taches
             Planning planning = new Planning();
             try {
                 planning = this.fixerPériodePlanning();
@@ -466,62 +471,12 @@ public class Utilisateur implements Serializable {
                 planifier();
             }
             ArrayList<Tache> listTaches = new ArrayList<>();
-            planning = fixerCréneauxLibres(planning);
-            /// EXEMPLE DE TEST
+            System.out.println("Entrez le nombre de taches dans le planning:");
+            int numTaches = Integer.parseInt(scanner.nextLine());
 
-            Catégorie c1 = new Catégorie("Studies", new Color(0, 0, 0));
-            Catégorie c2 = new Catégorie("cooking", new Color(255, 255, 255));
-            LocalDate date1 = LocalDate.parse("2023-06-20");
-            LocalTime time1 = LocalTime.now();
-            LocalDate date2 = LocalDate.parse("2023-05-29");
-            LocalTime time2 = LocalTime.parse("22:00");
-            LocalDate date3 = LocalDate.parse("2023-05-28");
-            LocalTime time3 = LocalTime.parse("18:00");
-            LocalDate date4 = LocalDate.parse("2023-05-28");
-            LocalTime time4 = LocalTime.parse("17:00");
-            TacheSimple tache1 = new TacheSimple(c1, date1, time1, Priorité.LOW, 50, "Tache1", 0);
-            TacheSimple tache2 = new TacheSimple(c2, date2, time2, Priorité.HIGH, 100, "Tache2", 0);
-            TacheSimple tache4 = new TacheSimple(c2, date4, time4, Priorité.MEDIUM, 100, "Tache4", 0);
-            TacheDécomposable tache5 = new TacheDécomposable(c2, LocalDate.parse("2023-05-30"), time3, Priorité.LOW,
-                    200, "Tache5");
-            listTaches.add(tache1);
-            listTaches.add(tache2);
-            listTaches.add(tache4);
-            listTaches.add(tache5);
-            planning = planifierEnsembleTaches(planning, listTaches);
-            // Accepter le planning
-            System.out.println("1. Accepter le planning\n2.Refuser le planning");
-            option = Integer.parseInt(scanner1.nextLine());
-            if (option == 1) { // Insérer le planning dans le calendrier
-                calendrierPerso.getJournéesCalendrier().addAll(planning.getJournéesPlanifiées());
-                historiquePlannings.add(planning);
-                System.out.println("\n\n\n*** Calendrier de " + pseudo + "\n\n" + calendrierPerso);
-            }
-            if (option == 2) {
-                System.out.println("Planning supprimé avec succès.");
-            }
-        }
-        if (option == 3) { // Planification d'une tache avant une date limite
-            TacheSimple tache3 = new TacheSimple(new Catégorie("kk", new Color(0, 0, 0)),
-                    LocalDate.parse("2023-05-29"), LocalTime.parse("22:00"), Priorité.HIGH, 100, "AnaTacheSamta",
-                    0);
-            planifierTacheAvantDateLimite(tache3, LocalDate.parse("2023-05-21"));
-        }
-        if (option == 4) {
-            ArrayList<Tache> listeTachesProjet = new ArrayList<>();
-
-            System.out.println("\nIntroduisez les informations du projet:\n > Nom projet: ");
-            Scanner scanner = new Scanner(System.in);
-            String nomProjet = scanner.nextLine();
-
-            System.out.println("> Description du projet: ");
-            String description = scanner.nextLine();
-
-            System.out.println("> Taches du projet (tapez stop pour quitter la saisie)");
-
-            System.out.println("Entrez le nom de la tache:");
-            String nomTache = scanner.nextLine();
-            if (nomTache == "stop") {
+            for (int i = 0; i < numTaches; i++) {
+                System.out.println("Entrez le nom de la tache n° " + i);
+                String nomTache = scanner.nextLine();
 
                 System.out.println("Entrez la durée de la tache (en minutes):");
                 int dureeTache = Integer.parseInt(scanner.nextLine());
@@ -541,11 +496,110 @@ public class Utilisateur implements Serializable {
                 System.out.println("Entrez la catégorie de la tache (STUDIES, WORK, COOKING..):");
                 String categorieTache = scanner.nextLine();
                 Catégorie categorie = new Catégorie(categorieTache, new Color(0, 0, 0));
-                TacheSimple tache = new TacheSimple(categorie, dateLimite, heureLimite, priorite, dureeTache, nomTache,
+                System.out.println("Tache simple ? (1/0)");
+                int estSimple = Integer.parseInt(scanner1.nextLine());
+                if (estSimple == 0) {
+                    TacheDécomposable tache = new TacheDécomposable(categorie, dateLimite, heureLimite, priorite,
+                            dureeTache, nomTache);
+                    listTaches.add(tache);
+                }
+                if (estSimple == 1) {
+                    TacheSimple tache = new TacheSimple(categorie, dateLimite, heureLimite, priorite, dureeTache,
+                            nomTache, 0);
+                    listTaches.add(tache);
+                }
+            }
+            planning = fixerCréneauxLibres(planning);
+            planning = planifierEnsembleTaches(planning, listTaches);
+
+            System.out.println("1. Accepter le planning\n2. Refuser le planning");
+            option = Integer.parseInt(scanner.nextLine());
+
+            if (option == 1) {
+                // Insérer le planning dans le calendrier
+                calendrierPerso.getJournéesCalendrier().addAll(planning.getJournéesPlanifiées());
+                historiquePlannings.add(planning);
+                planner.updateUser();
+                System.out.println("\n\n\n*** Calendrier de " + pseudo + "\n\n" + calendrierPerso);
+            } else if (option == 2) {
+                System.out.println("Planning supprimé avec succès.");
+            }
+
+            if (option == 3) { // Planification d'une tache avant une date limite
+                System.out.println("Entrez le nom de la tache à planifier avant la date limite");
+                String nomTache = scanner.nextLine();
+
+                System.out.println("Entrez la durée de la tache (en minutes):");
+                int dureeTache = Integer.parseInt(scanner.nextLine());
+
+                System.out.println("Entrez la priorité de la tache (HIGH, MEDIUM, ou LOW):");
+                String prioriteTache = scanner.nextLine();
+                Priorité priorite = Priorité.valueOf(prioriteTache);
+
+                System.out.println("Entrez la date limite de la tache (format: aaaa-mm-jj):");
+                String dateLimiteString = scanner.nextLine();
+                LocalDate dateLimite = LocalDate.parse(dateLimiteString);
+
+                System.out.println("Entrez l'heure limite de la tache (format: hh:mm:ss):");
+                String heureLimiteString = scanner.nextLine();
+                LocalTime heureLimite = LocalTime.parse(heureLimiteString);
+
+                System.out.println("Entrez la catégorie de la tache (STUDIES, WORK, COOKING..):");
+                String categorieTache = scanner.nextLine();
+                Catégorie categorie = new Catégorie(categorieTache, new Color(0, 0, 0));
+                System.out.println("Entrez la date limite de la planification de la tache");
+                String dateLimitePlanificationString = scanner.nextLine();
+                LocalDate dateLimitePlanification = LocalDate.parse(dateLimitePlanificationString);
+
+                TacheSimple tache = new TacheSimple(categorie, dateLimite, heureLimite, priorite, dureeTache,
+                        nomTache,
                         0);
-                listeTachesProjet.add(tache);
-            } else {
-                Planning planning = new Planning();
+
+                planifierTacheAvantDateLimite(tache, dateLimitePlanification);
+            }
+            if (option == 4) {
+                ArrayList<Tache> listeTachesProjet = new ArrayList<>();
+
+                System.out.println("\nIntroduisez les informations du projet:\n > Nom projet: ");
+                String nomProjet = scanner.nextLine();
+
+                System.out.println("> Description du projet: ");
+                String description = scanner.nextLine();
+
+                System.out.println("> Taches du projet (tapez stop pour quitter la saisie)");
+
+                System.out.println("Entrez le nombre de taches dans le projet:");
+                numTaches = Integer.parseInt(scanner.nextLine());
+
+                for (int i = 0; i < numTaches; i++) {
+                    System.out.println("Entrez le nom de la tache n° " + i);
+                    String nomTache = scanner.nextLine();
+
+                    System.out.println("Entrez la durée de la tache (en minutes):");
+                    int dureeTache = Integer.parseInt(scanner.nextLine());
+
+                    System.out.println("Entrez la priorité de la tache (HIGH, MEDIUM, ou LOW):");
+                    String prioriteTache = scanner.nextLine();
+                    Priorité priorite = Priorité.valueOf(prioriteTache);
+
+                    System.out.println("Entrez la date limite de la tache (format: aaaa-mm-jj):");
+                    String dateLimiteString = scanner.nextLine();
+                    LocalDate dateLimite = LocalDate.parse(dateLimiteString);
+
+                    System.out.println("Entrez l'heure limite de la tache (format: hh:mm:ss):");
+                    String heureLimiteString = scanner.nextLine();
+                    LocalTime heureLimite = LocalTime.parse(heureLimiteString);
+
+                    System.out.println("Entrez la catégorie de la tache (STUDIES, WORK, COOKING..):");
+                    String categorieTache = scanner.nextLine();
+                    Catégorie categorie = new Catégorie(categorieTache, new Color(0, 0, 0));
+
+                    TacheSimple tache = new TacheSimple(categorie, dateLimite, heureLimite, priorite, dureeTache,
+                            nomTache,
+                            0);
+                    listeTachesProjet.add(tache);
+                }
+                planning = new Planning();
                 try {
                     planning = this.fixerPériodePlanning();
                 } catch (DateDébutException e) {
@@ -553,11 +607,11 @@ public class Utilisateur implements Serializable {
                     planifier();
                 }
                 Projet projet = new Projet(nomProjet, description, listeTachesProjet);
-                planifierProjet(planning, projet);
                 historiqueProjets.add(projet);
+
             }
+            planner.updateUser(this);
         }
-        planner.updateUser(this);
     }
 
     // Planification automatique d'une tache
@@ -691,33 +745,46 @@ public class Utilisateur implements Serializable {
         planner.updateUser(this);
     }
 
-    public void planifierProjet(Planning planning, Projet projet) {
+    public void planifierProjetManuel(Projet projet) {
         ArrayList<Tache> listeTachesProjet = new ArrayList<>(null);
         listeTachesProjet = projet.getListeTaches();
         Scanner scanner = new Scanner(System.in);
-        System.out.println(
-                "1. Planification manuelle des taches du projet\n2. Planification automatique des taches du projet");
-        int option = Integer.parseInt(scanner.nextLine());
-        if (option == 1) { // Planification manuelle des taches du projet
-            Iterator iterator = listeTachesProjet.iterator();
-            while (iterator.hasNext()) {
-                TacheSimple tache = (TacheSimple) iterator.next();
-                System.out.println("Introduisez la journée yyyy-mm-dd: ");
-                String dateTacheString = scanner.nextLine();
-                LocalDate dateTache = LocalDate.parse(dateTacheString);
-                System.out.println("Introduisez l'heure début du créneau souhaité: HH:mm");
-                String creneauString = scanner.nextLine();
-                LocalTime heureDebut = LocalTime.parse(creneauString);
-                LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
-                Creneau creneau = new Creneau(heureDebut, heureFin);
-                planifierTacheManuelle(dateTache, creneau, tache);
-
-            }
-        } else if (option == 2) { // Planification automatique des taches du projet
-            planifierEnsembleTaches(planning, listeTachesProjet);
+        Iterator iterator = listeTachesProjet.iterator();
+        while (iterator.hasNext()) {
+            // à remplacer par le controlleur de la planification d'une seule tache manuelle
+            TacheSimple tache = (TacheSimple) iterator.next();
+            System.out.println("Introduisez la journée yyyy-mm-dd: ");
+            String dateTacheString = scanner.nextLine();
+            LocalDate dateTache = LocalDate.parse(dateTacheString);
+            System.out.println("Introduisez l'heure début du créneau souhaité: HH:mm");
+            String creneauString = scanner.nextLine();
+            LocalTime heureDebut = LocalTime.parse(creneauString);
+            LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
+            Creneau creneau = new Creneau(heureDebut, heureFin);
+            planifierTacheManuelle(dateTache, creneau, tache);
         }
         planner.updateUser(this);
+    }
 
+    public void planifierProjetAuto(Planning planning, Projet projet) {
+        ArrayList<Tache> listeTachesProjet = new ArrayList<>(null);
+        listeTachesProjet = projet.getListeTaches();
+        Scanner scanner = new Scanner(System.in);
+        Iterator iterator = listeTachesProjet.iterator();
+        while (iterator.hasNext()) {
+            // à remplacer par le controlleur de la planification d'une seule tache manuelle
+            TacheSimple tache = (TacheSimple) iterator.next();
+            System.out.println("Introduisez la journée yyyy-mm-dd: ");
+            String dateTacheString = scanner.nextLine();
+            LocalDate dateTache = LocalDate.parse(dateTacheString);
+            System.out.println("Introduisez l'heure début du créneau souhaité: HH:mm");
+            String creneauString = scanner.nextLine();
+            LocalTime heureDebut = LocalTime.parse(creneauString);
+            LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
+            Creneau creneau = new Creneau(heureDebut, heureFin);
+        }
+        planifierEnsembleTaches(planning, listeTachesProjet);
+        planner.updateUser(this);
     }
 
     public boolean hasIntersection(Creneau creneau1, Creneau creneau2) {
