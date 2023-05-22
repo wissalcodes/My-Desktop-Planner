@@ -519,7 +519,7 @@ public class Utilisateur implements Serializable {
                 // Insérer le planning dans le calendrier
                 calendrierPerso.getJournéesCalendrier().addAll(planning.getJournéesPlanifiées());
                 historiquePlannings.add(planning);
-                planner.updateUser();
+                planner.updateUser(this);
                 System.out.println("\n\n\n*** Calendrier de " + pseudo + "\n\n" + calendrierPerso);
             } else if (option == 2) {
                 System.out.println("Planning supprimé avec succès.");
