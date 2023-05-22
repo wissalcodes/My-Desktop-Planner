@@ -1,19 +1,22 @@
-package Noyau ;
+package Noyau;
+
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class Creneau implements Comparable<Creneau> {
+public class Creneau implements Comparable<Creneau>, Serializable {
     private LocalTime heureDebut;
     private LocalTime heureFin;
 
-    public String getHeureDebutString(){
+    public String getHeureDebutString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        return heureDebut.format(formatter) ;
+        return heureDebut.format(formatter);
     }
-    public String getHeureFinString(){
+
+    public String getHeureFinString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        return heureFin.format(formatter) ;
+        return heureFin.format(formatter);
     }
 
     public Creneau(LocalTime heureDebut, LocalTime heureFin) {

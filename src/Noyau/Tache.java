@@ -1,10 +1,13 @@
-package Noyau ;
+package Noyau;
+
+import java.io.Serializable;
 import java.time.*;
 
-public class Tache {
+public class Tache implements Serializable {
     @Override
     public String toString() {
-        return "Tache [nom=" + nom +" catégorie=" + catégorie + ", deadlineDate=" + deadlineDate + ", deadlineHeure=" + deadlineHeure
+        return "Tache [nom=" + nom + " catégorie=" + catégorie + ", deadlineDate=" + deadlineDate + ", deadlineHeure="
+                + deadlineHeure
                 + ", priorité=" + priorité + ", durée=" + durée + ", etat=" + etat + "]";
     }
 

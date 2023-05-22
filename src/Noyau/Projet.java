@@ -1,9 +1,10 @@
-package Noyau ;
+package Noyau;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Projet {
+public class Projet implements Serializable {
     private String nom;
     private String description;
     private ArrayList<Tache> listeTaches;

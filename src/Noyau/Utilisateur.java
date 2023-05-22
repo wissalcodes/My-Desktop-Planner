@@ -1,14 +1,16 @@
-package Noyau ;
-import Control.* ;
+package Noyau;
+
+import Control.*;
 import java.util.*;
 
 import javax.swing.event.ListDataEvent;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
-public class Utilisateur {
+public class Utilisateur implements Serializable {
     private MyDesktopPlanner planner;
     private String pseudo;
     private int nbMinTaches = 1;
@@ -41,7 +43,8 @@ public class Utilisateur {
 
     public Utilisateur(String pseudo) {
         this.pseudo = pseudo;
-        planner = new MyDesktopPlanner();}
+        planner = new MyDesktopPlanner();
+    }
 
     // getters and setters
     public String getPseudo() {
@@ -84,26 +87,29 @@ public class Utilisateur {
         this.listCatégories = listCatégories;
     }
 
-   /*  public void planifierProjetManuel(Projet projet) {
-        ArrayList<Tache> listeTachesProjet = new ArrayList<>(null);
-        listeTachesProjet = projet.getListeTaches();
-        Scanner scanner = new Scanner(System.in);
-            Iterator iterator = listeTachesProjet.iterator();
-            while (iterator.hasNext()) {
-                // à remplacer par le controlleur de la planification d'une seule tache manuelle
-                TacheSimple tache = (TacheSimple) iterator.next();
-               System.out.println("Introduisez la journée yyyy-mm-dd: ");
-              String dateTacheString = scanner.nextLine();
-               LocalDate dateTache = LocalDate.parse(dateTacheString);
-               System.out.println("Introduisez l'heure début du créneau souhaité: HH:mm");
-                String creneauString = scanner.nextLine();
-                LocalTime heureDebut = LocalTime.parse(creneauString);
-                LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
-               Creneau creneau = new Creneau(heureDebut, heureFin);
-                planifierTacheManuelle(dateTache, creneau, tache,  );
-            }
-      //  planner.updateUser(this);
-    }*/
+    /*
+     * public void planifierProjetManuel(Projet projet) {
+     * ArrayList<Tache> listeTachesProjet = new ArrayList<>(null);
+     * listeTachesProjet = projet.getListeTaches();
+     * Scanner scanner = new Scanner(System.in);
+     * Iterator iterator = listeTachesProjet.iterator();
+     * while (iterator.hasNext()) {
+     * // à remplacer par le controlleur de la planification d'une seule tache
+     * manuelle
+     * TacheSimple tache = (TacheSimple) iterator.next();
+     * System.out.println("Introduisez la journée yyyy-mm-dd: ");
+     * String dateTacheString = scanner.nextLine();
+     * LocalDate dateTache = LocalDate.parse(dateTacheString);
+     * System.out.println("Introduisez l'heure début du créneau souhaité: HH:mm");
+     * String creneauString = scanner.nextLine();
+     * LocalTime heureDebut = LocalTime.parse(creneauString);
+     * LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
+     * Creneau creneau = new Creneau(heureDebut, heureFin);
+     * planifierTacheManuelle(dateTache, creneau, tache, );
+     * }
+     * // planner.updateUser(this);
+     * }
+     */
 
     @Override
     public int hashCode() {
@@ -189,7 +195,7 @@ public class Utilisateur {
         }
         return planning;
     }
-   
+
     public Journée planifierTacheManuelle(LocalDate tacheDate, Creneau creneau, TacheSimple tache, boolean bloqué) {
         Scanner scanner1 = new Scanner(System.in);
         Journée journée = calendrierPerso.getJournéeByDate(tacheDate);
@@ -200,43 +206,50 @@ public class Utilisateur {
             while (iterator.hasNext()) {
                 CreneauTache creneauTache = (CreneauTache) iterator.next();
                 if (hasIntersection(creneauTache.getCreneau(), creneau)) {
-                  
-                    PlanificationManuelleController.impossiblePlanifier(); 
 
-                   /*  //System.out.println(
-                            "Impossible de programmer la tache dans ce créneau, car il est réservé pour une deuxième tache.\n1. L'ajouter à la liste des taches non-planifiées.\n2. Planifier dans un autre créneau");
-                    int option = Integer.parseInt(scanner1.nextLine());
-                    if (option == 1) {
-                        listeTachesUnscheduled.add(tache);
-                        break;
-                    } else if (option == 2) {
-                        Scanner scanner = new Scanner(System.in);
-                        System.out.println("Introduisez la journée yyyy-mm-dd: ");
-                        String dateTacheString = scanner.nextLine();
-                        LocalDate dateTache = LocalDate.parse(dateTacheString);
-                        System.out.println("Introduisez l'heure début du créneau souhaité: HH:mm");
-                        String creneauString = scanner1.nextLine();
-                        LocalTime heureDebut = LocalTime.parse(creneauString);
-                        LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
-                        creneau = new Creneau(heureDebut, heureFin);
-                        planifierTacheManuelle(tacheDate, creneau, tache);
-                        break;
-                    }*/
+                    PlanificationManuelleController.impossiblePlanifier();
+
+                    /*
+                     * //System.out.println(
+                     * "Impossible de programmer la tache dans ce créneau, car il est réservé pour une deuxième tache.\n1. L'ajouter à la liste des taches non-planifiées.\n2. Planifier dans un autre créneau"
+                     * );
+                     * int option = Integer.parseInt(scanner1.nextLine());
+                     * if (option == 1) {
+                     * listeTachesUnscheduled.add(tache);
+                     * break;
+                     * } else if (option == 2) {
+                     * Scanner scanner = new Scanner(System.in);
+                     * System.out.println("Introduisez la journée yyyy-mm-dd: ");
+                     * String dateTacheString = scanner.nextLine();
+                     * LocalDate dateTache = LocalDate.parse(dateTacheString);
+                     * System.out.println("Introduisez l'heure début du créneau souhaité: HH:mm");
+                     * String creneauString = scanner1.nextLine();
+                     * LocalTime heureDebut = LocalTime.parse(creneauString);
+                     * LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
+                     * creneau = new Creneau(heureDebut, heureFin);
+                     * planifierTacheManuelle(tacheDate, creneau, tache);
+                     * break;
+                     * }
+                     */
                 }
             }
-            /*System.out.println("Souhaitez vous bloquer ce créneau pour cette tache? (1/0)"); // le créneau ne sera
-                                                                                             // pas // touchée lors
-                                                                                             // de la
-                                                                                             // replanification // //
-                                                                                             // replanification*/
+            /*
+             * System.out.
+             * println("Souhaitez vous bloquer ce créneau pour cette tache? (1/0)"); // le
+             * créneau ne sera
+             * // pas // touchée lors
+             * // de la
+             * // replanification // //
+             * // replanification
+             */
             CreneauTache creneauTache = new CreneauTache(creneau, tache);
-        if ( bloqué) {
+            if (bloqué) {
                 creneauTache.setEstBloqué(true);
             }
             journée.getListCreneauxTaches().add(creneauTache);
             System.out.println("Tache programmée avec succès.");
             calendrierPerso.journéesCalendrier.add(journée);
-            //System.out.println(calendrierPerso);
+            // System.out.println(calendrierPerso);
 
         } else {
             // si la tache est programmée dans un créneau qui était libre, il faut mettre à
@@ -256,7 +269,7 @@ public class Utilisateur {
                     CreneauTache creneauTache = new CreneauTache(creneau, tache);
                     journée.getListCreneauxTaches().add(creneauTache);
                     calendrierPerso.journéesCalendrier.add(journée);
-                    //System.out.println(calendrierPerso);
+                    // System.out.println(calendrierPerso);
                 }
             }
         }
@@ -765,6 +778,6 @@ public class Utilisateur {
     }
 
     public void setPlanner(MyDesktopPlanner myDesktopPlanner) {
-        this.planner = planner ;
+        this.planner = planner;
     }
 }

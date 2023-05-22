@@ -1,9 +1,10 @@
-package Noyau ;
+package Noyau;
 
 import java.util.*;
+import java.io.Serializable;
 import java.time.*;
 
-public class TacheDécomposable extends Tache {
+public class TacheDécomposable extends Tache implements Serializable {
     private List<Tache> listeSousTaches = new ArrayList<>();
 
     public List<Tache> getListeSousTaches() {

@@ -1,6 +1,8 @@
-package Noyau ;
+package Noyau;
 
-public enum Badge {
+import java.io.Serializable;
+
+public enum Badge implements Serializable {
     GOOD,
     VERYGOOD,
     EXCELLENT;

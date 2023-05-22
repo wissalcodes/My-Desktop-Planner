@@ -1,9 +1,10 @@
-package Noyau ;
+package Noyau;
 
 import java.util.Date;
+import java.io.Serializable;
 import java.time.*;
 
-public class TacheSimple extends Tache {
+public class TacheSimple extends Tache implements Serializable {
     public TacheSimple(Catégorie catégorie, LocalDate deadlineDate, LocalTime deadlineHeure, Priorité priorité,
             long durée, String nom, int période) {
         super(catégorie, deadlineDate, deadlineHeure, priorité, durée, nom);
