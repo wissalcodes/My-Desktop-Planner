@@ -29,6 +29,10 @@ public class Utilisateur implements Serializable {
         return listeCatégories;
     }
 
+    public void ajouterCatégorie(Catégorie catégorie) {
+        this.listeCatégories.add(catégorie);
+    }
+
     public void setListeCatégories(Set<Catégorie> listeCatégories) {
         this.listeCatégories = listeCatégories;
         planner.updateUser(this);

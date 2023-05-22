@@ -1,4 +1,4 @@
-package Control ;
+package Control;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 
 public class AuthenticationController {
 
-    protected MyDesktopPlanner planner ; 
+    protected MyDesktopPlanner planner;
 
     @FXML
     private Button authetifierButton;
@@ -33,77 +33,76 @@ public class AuthenticationController {
     @FXML
     private Button quitterButton;
 
-/* 
-    public AuthenticationController(MyDesktopPlanner planner){
-
-        this.planner = planner ;
-
+    /*
+     * public AuthenticationController(MyDesktopPlanner planner){
+     * 
+     * this.planner = planner ;
+     * 
+     * }
+     */
+    public void setMyDesktop(MyDesktopPlanner planner) {
+        this.planner = planner;
     }
-    */
-    public void setMyDesktop(MyDesktopPlanner planner){
-        this.planner = planner ; 
-    }
 
-    /*void afficherPage( FXMLLoader loader , ){
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-            Parent root = loader.load() ; 
-            InscriptionController inscrCtrl = loader.getController() ;
-            inscrCtrl.setMyDesktop(planner);
-            Scene s = new Scene(root);
-            Stage calendarStage = new Stage() ;
-            calendarStage.setScene(s);
-            calendarStage.show();
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-      
-    }*/
-      
+    /*
+     * void afficherPage( FXMLLoader loader , ){
+     * try{
+     * FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+     * Parent root = loader.load() ;
+     * InscriptionController inscrCtrl = loader.getController() ;
+     * inscrCtrl.setMyDesktop(planner);
+     * Scene s = new Scene(root);
+     * Stage calendarStage = new Stage() ;
+     * calendarStage.setScene(s);
+     * calendarStage.show();
+     * }
+     * catch(IOException e){
+     * e.printStackTrace();
+     * }
+     * 
+     * }
+     */
+
     @FXML
     void clickAuthentifier(ActionEvent event) {
-       String pseudo = pseudoTextField.getText() ;
-       boolean existe = this.planner.rechercheUtilisateur(pseudo);
+        String pseudo = pseudoTextField.getText();
+        boolean existe = this.planner.rechercheUtilisateur(pseudo);
 
-        if(existe){
-            try{
+        if (existe) {
+            try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/PlannificationPage.fxml"));
-                Parent root = loader.load() ; 
-                PlanificationPageController controleur = loader.getController() ;
+                Parent root = loader.load();
+                PlanificationPageController controleur = loader.getController();
                 controleur.setUtilisateur(planner.getUtilisateurParPseudo(pseudo));
-                 //controleur.initCalendar( planner.getUtilisateurParPseudo(pseudo))  ;
-                //Appleler le constructeur du calendarControlleur pour initialiser la page 
+                // controleur.initCalendar( planner.getUtilisateurParPseudo(pseudo)) ;
+                // Appleler le constructeur du calendarControlleur pour initialiser la page
                 Scene s = new Scene(root);
-                Stage calendarStage = new Stage() ;
+                Stage calendarStage = new Stage();
                 calendarStage.setScene(s);
                 calendarStage.show();
-            }
-            catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else{
+        } else {
             matriculeNonTrouve(pseudo);
         }
     }
 
     @FXML
-    void inscrire(ActionEvent event) { 
-        try{
+    void inscrire(ActionEvent event) {
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/Inscription.fxml"));
-            Parent root = loader.load() ; 
-            InscriptionController inscrCtrl = loader.getController() ;
+            Parent root = loader.load();
+            InscriptionController inscrCtrl = loader.getController();
             inscrCtrl.setMyDesktop(planner);
             Scene s = new Scene(root);
-            Stage calendarStage = new Stage() ;
+            Stage calendarStage = new Stage();
             calendarStage.setScene(s);
             calendarStage.show();
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        }   
         }
+    }
 
     @FXML
     void quitter(ActionEvent event) {
@@ -111,17 +110,16 @@ public class AuthenticationController {
 
     }
 
-    public void matriculeNonTrouve(String m) { 
+    public void matriculeNonTrouve(String m) {
 
         Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Pseduo introuvable");
+        alert.setTitle("Pseudo introuvable");
         alert.setHeaderText(null);
 
-        alert.setContentText("le pseudo recherché "+ m + " n'existe pas!" + 
-        "Veuillez introduire un autre pseudo");
+        alert.setContentText("le pseudo recherché " + m + " n'existe pas!" +
+                "Veuillez introduire un autre pseudo");
 
         alert.showAndWait();
-        }
+    }
 
 }
-
