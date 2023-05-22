@@ -18,9 +18,11 @@ public class Utilisateur implements Serializable {
     protected Set<Catégorie> listeCatégories = new HashSet<>();
     protected List<Tache> listeTachesUnscheduled = new ArrayList<>();
     private static int duréeMinimale = 30;
+
     public MyDesktopPlanner getPlanner() {
         return planner;
     }
+
     // durée minimale de 30 minutes, sera vérifié lors de la décomposition d'un
     // créneau
     public Set<Catégorie> getListeCatégories() {
@@ -29,6 +31,8 @@ public class Utilisateur implements Serializable {
 
     public void setListeCatégories(Set<Catégorie> listeCatégories) {
         this.listeCatégories = listeCatégories;
+        planner.updateUser(this);
+
     }
 
     public Set<Planning> getHistoriquePlannings() {
@@ -37,6 +41,8 @@ public class Utilisateur implements Serializable {
 
     public void setHistoriquePlannings(Set<Planning> historiquePlannings) {
         this.historiquePlannings = historiquePlannings;
+        planner.updateUser(this);
+
     }
 
     private List<Projet> historiqueProjets = new ArrayList<>();
@@ -55,6 +61,7 @@ public class Utilisateur implements Serializable {
 
     public void setPseudo(String pseudo) {
         this.pseudo = pseudo;
+
     }
 
     public Calendrier getCalendrierPerso() {
@@ -63,6 +70,8 @@ public class Utilisateur implements Serializable {
 
     public void setCalendrierPerso(Calendrier calendrierPerso) {
         this.calendrierPerso = calendrierPerso;
+        planner.updateUser(this);
+
     }
 
     public int getNbMinTaches() {
@@ -71,6 +80,8 @@ public class Utilisateur implements Serializable {
 
     public void setNbMinTaches(int nbMinTaches) {
         this.nbMinTaches = nbMinTaches;
+        planner.updateUser(this);
+
     }
 
     public List<Projet> getHitoriqueProjets() {
@@ -79,6 +90,7 @@ public class Utilisateur implements Serializable {
 
     public void setHitoriqueProjets(List<Projet> hitoriqueProjets) {
         this.historiqueProjets = hitoriqueProjets;
+        planner.updateUser(this);
     }
 
     public List<Catégorie> getListCatégories() {
@@ -87,6 +99,7 @@ public class Utilisateur implements Serializable {
 
     public void setListCatégories(List<Catégorie> listCatégories) {
         this.listCatégories = listCatégories;
+        planner.updateUser(this);
     }
 
     /*
@@ -155,6 +168,7 @@ public class Utilisateur implements Serializable {
         }
         // Créer le nouveau planning
         Planning planning = new Planning(startDate, dateLimite, journéesPlanifiées);
+        planner.updateUser(this);
         return planning;
     }
 
@@ -195,6 +209,7 @@ public class Utilisateur implements Serializable {
         } else {
             System.out.println("Option invalide.");
         }
+        planner.updateUser(this);
         return planning;
     }
 
@@ -275,6 +290,7 @@ public class Utilisateur implements Serializable {
                 }
             }
         }
+        planner.updateUser(this);
 
         return (journée);
     }
@@ -438,6 +454,7 @@ public class Utilisateur implements Serializable {
             // afficher et retourner le planning proposé par le système
             System.out.println("\n\nPlanning proposé " + planning);
         }
+        planner.updateUser(this);
         return (planning);
     }
 
@@ -611,6 +628,7 @@ public class Utilisateur implements Serializable {
                 historiqueProjets.add(projet);
             }
         }
+        planner.updateUser(this);
     }
 
     // Planification automatique d'une tache
@@ -741,6 +759,7 @@ public class Utilisateur implements Serializable {
                 System.out.println("Tache programmée avec succès.");
             }
         }
+        planner.updateUser(this);
     }
 
     public void planifierProjet(Planning planning, Projet projet) {
@@ -769,7 +788,7 @@ public class Utilisateur implements Serializable {
             planifierEnsembleTaches(planning, listeTachesProjet);
         }
         historiqueProjets.add(projet);
-
+        planner.updateUser(this);
     }
 
     public boolean hasIntersection(Creneau creneau1, Creneau creneau2) {
@@ -779,7 +798,7 @@ public class Utilisateur implements Serializable {
                 || creneau1.getHeureFin().equals(creneau2.getHeureDebut());
     }
 
-    public void setPlanner(MyDesktopPlanner myDesktopPlanner) {
+    public void setPlanner(MyDesktopPlanner planner) {
         this.planner = planner;
     }
 }
