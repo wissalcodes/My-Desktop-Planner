@@ -36,6 +36,30 @@ public class PlanificationPageController {
 
     @FXML
     private Button projectLabel;
+    
+    @FXML
+    private Button consulterProjectButtron;
+    @FXML
+    void afficherLesProjetsClick(ActionEvent event) {
+
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/consulterProjet.fxml"));
+            Parent root = loader.load() ; 
+
+            ConsulterProjetController controleur = loader.getController() ;
+            controleur.setUtilisateur(user);
+            controleur.initialiser();
+
+            Scene s = new Scene(root);
+            Stage calendarStage = new Stage() ;
+            calendarStage.setScene(s);
+            calendarStage.show();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+
+    }
 
     @FXML
     void afficherLesPlanningClick(ActionEvent event) {
@@ -59,12 +83,28 @@ public class PlanificationPageController {
     }
 
     @FXML
-    void planifierEnsembleTachesClick(ActionEvent event) {
+    void planificationAutomatiqueClick(ActionEvent event) {
 
     }
 
     @FXML
     void planifierProjetClick(ActionEvent event) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/PlanificationProject.fxml"));
+            Parent root = loader.load() ; 
+
+            PlanificationProjetController controleur = loader.getController() ;
+            controleur.setUtilisateur(user);
+           // controleur.initialiser();
+
+            Scene s = new Scene(root);
+            Stage calendarStage = new Stage() ;
+            calendarStage.setScene(s);
+            calendarStage.show();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
 
     }
 

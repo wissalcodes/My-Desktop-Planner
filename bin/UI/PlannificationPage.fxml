@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Control.PlanificationPageController">
    <children>
       <GridPane layoutX="1.0" layoutY="-1.0" prefHeight="400.0" prefWidth="600.0">
@@ -25,16 +24,15 @@
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                <children>
                   <Button fx:id="manuelleLabel" layoutX="132.0" layoutY="116.0" mnemonicParsing="false" onAction="#planifierTacheManuelleClick" prefHeight="26.0" prefWidth="184.0" text="Manuelle" />
-                  <Button fx:id="automatiqueLabel" layoutX="136.0" layoutY="173.0" mnemonicParsing="false" onAction="#planifierEnsembleTachesClick" prefHeight="26.0" prefWidth="184.0" text="Automatique" />
-                  <Button fx:id="avantDateLimiteLabel" layoutX="132.0" layoutY="221.0" mnemonicParsing="false" onAction="#planifierTacheAvantDateLimiteClick" prefHeight="26.0" prefWidth="184.0" text="une tache avant une date limite" />
-                  <Button fx:id="projectLabel" layoutX="136.0" layoutY="266.0" mnemonicParsing="false" onAction="#planifierProjetClick" prefHeight="26.0" prefWidth="184.0" text="Un projet" />
-                  <Button fx:id="consulterPlanningLabel" layoutX="132.0" layoutY="320.0" mnemonicParsing="false" onAction="#afficherLesPlanningClick" prefHeight="26.0" prefWidth="184.0" text="Consulter mes planning" />
+                  <Button fx:id="automatiqueLabel" layoutX="132.0" layoutY="165.0" mnemonicParsing="false" onAction="#planificationAutomatiqueClick" prefHeight="26.0" prefWidth="184.0" text="Automatique" />
+                  <Button fx:id="projectLabel" layoutX="132.0" layoutY="214.0" mnemonicParsing="false" onAction="#planifierProjetClick" prefHeight="26.0" prefWidth="184.0" text="Un projet" />
+                  <Button fx:id="consulterPlanningLabel" layoutX="132.0" layoutY="260.0" mnemonicParsing="false" onAction="#afficherLesPlanningClick" prefHeight="26.0" prefWidth="184.0" text="Consulter mes planning" />
                   <Label layoutX="161.0" layoutY="37.0" text="Planification" textFill="#00504c">
                      <font>
                         <Font name="Times New Roman" size="25.0" />
                      </font>
                   </Label>
-                  <Button fx:id="consulterPlanningLabel1" layoutX="132.0" layoutY="359.0" mnemonicParsing="false" onAction="#afficherLesPlanningClick" prefHeight="26.0" prefWidth="184.0" text="Consulter mes Projets" />
+                  <Button fx:id="consulterProjectButtron" layoutX="132.0" layoutY="299.0" mnemonicParsing="false" onAction="#afficherLesProjetsClick" prefHeight="26.0" prefWidth="184.0" text="Consulter mes Projets" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="400.0" prefWidth="78.0" style="-fx-background-color: #00504c;">

@@ -21,7 +21,11 @@ import java.awt.color.*;
 
 public class PlanificationManuelleController {
 
-    Utilisateur user ;
+    private Utilisateur user ;
+   private  TacheSimple tache ; 
+    public TacheSimple getTache(){
+        return tache ; 
+    }
     
     public void setUtilisateur(Utilisateur user){
         this.user=user ;
@@ -104,12 +108,13 @@ public java.awt.Color toAwtColor(javafx.scene.paint.Color fxColor){
     Creneau creneau = new Creneau(convertToTime(heureDebut), convertToTime(heureDebut).plusMinutes(durée)) ;
 
     CreneauTache creneauTache = new CreneauTache(creneau, tache) ;
+
     creneauTache.setEstBloqué(bloqué);
 
     user.planifierTacheManuelle(formatLocalDate( dateJournée ), creneau, tache, bloqué) ;
     
     user.getCalendrierPerso().afficherLesJournéePlanifié(); 
-  
+    this.tache = tache ;
 
     }
 

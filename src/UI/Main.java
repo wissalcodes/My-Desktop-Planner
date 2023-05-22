@@ -80,7 +80,7 @@ public class Main extends Application {
              user1.setHistoriquePlannings(listeDesPlannings);
 
 // MY DESKTOP PLANNER ET SA LISTE DES USERS
-        Set<Utilisateur> userSet = new HashSet<Utilisateur>();
+        ArrayList<Utilisateur> userSet = new ArrayList<Utilisateur>();
         userSet.add(user1);
         MyDesktopPlanner planner = new MyDesktopPlanner() ;
         planner.setListUtilisateurs(userSet); 

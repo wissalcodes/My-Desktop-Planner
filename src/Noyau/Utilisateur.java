@@ -9,6 +9,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class Utilisateur {
+    private MyDesktopPlanner planner;
     private String pseudo;
     private int nbMinTaches = 1;
     private Set<Planning> historiquePlannings = new TreeSet<>();
@@ -34,16 +35,13 @@ public class Utilisateur {
         this.historiquePlannings = historiquePlannings;
     }
 
-    private List<Projet> historiqueProjets;
+    private List<Projet> historiqueProjets = new ArrayList<>();
     private Calendrier calendrierPerso = new Calendrier();
     private List<Catégorie> listCatégories;
 
     public Utilisateur(String pseudo) {
-        // listCatégories.add(new Catégorie("STUDIES", null));
-        // listCatégories.add(new Catégorie("WORK", null));
-        // listCatégories.add(new Catégorie("COOKING", null));
         this.pseudo = pseudo;
-    }
+        planner = new MyDesktopPlanner();}
 
     // getters and setters
     public String getPseudo() {
@@ -86,6 +84,27 @@ public class Utilisateur {
         this.listCatégories = listCatégories;
     }
 
+   /*  public void planifierProjetManuel(Projet projet) {
+        ArrayList<Tache> listeTachesProjet = new ArrayList<>(null);
+        listeTachesProjet = projet.getListeTaches();
+        Scanner scanner = new Scanner(System.in);
+            Iterator iterator = listeTachesProjet.iterator();
+            while (iterator.hasNext()) {
+                // à remplacer par le controlleur de la planification d'une seule tache manuelle
+                TacheSimple tache = (TacheSimple) iterator.next();
+               System.out.println("Introduisez la journée yyyy-mm-dd: ");
+              String dateTacheString = scanner.nextLine();
+               LocalDate dateTache = LocalDate.parse(dateTacheString);
+               System.out.println("Introduisez l'heure début du créneau souhaité: HH:mm");
+                String creneauString = scanner.nextLine();
+                LocalTime heureDebut = LocalTime.parse(creneauString);
+                LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
+               Creneau creneau = new Creneau(heureDebut, heureFin);
+                planifierTacheManuelle(dateTache, creneau, tache,  );
+            }
+      //  planner.updateUser(this);
+    }*/
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -96,19 +115,14 @@ public class Utilisateur {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
-        if (getClass() != obj.getClass())
-            return false;
+        }
         Utilisateur other = (Utilisateur) obj;
-        if (pseudo == null) {
-            if (other.pseudo != null)
-                return false;
-        } else if (!pseudo.equals(other.pseudo))
-            return false;
-        return true;
+        return Objects.equals(pseudo, other.pseudo);
     }
 
     public Planning fixerPériodePlanning() throws DateDébutException {
@@ -175,7 +189,7 @@ public class Utilisateur {
         }
         return planning;
     }
-
+   
     public Journée planifierTacheManuelle(LocalDate tacheDate, Creneau creneau, TacheSimple tache, boolean bloqué) {
         Scanner scanner1 = new Scanner(System.in);
         Journée journée = calendrierPerso.getJournéeByDate(tacheDate);
@@ -186,6 +200,7 @@ public class Utilisateur {
             while (iterator.hasNext()) {
                 CreneauTache creneauTache = (CreneauTache) iterator.next();
                 if (hasIntersection(creneauTache.getCreneau(), creneau)) {
+                  
                     PlanificationManuelleController.impossiblePlanifier(); 
 
                    /*  //System.out.println(
@@ -221,7 +236,7 @@ public class Utilisateur {
             journée.getListCreneauxTaches().add(creneauTache);
             System.out.println("Tache programmée avec succès.");
             calendrierPerso.journéesCalendrier.add(journée);
-            System.out.println(calendrierPerso);
+            //System.out.println(calendrierPerso);
 
         } else {
             // si la tache est programmée dans un créneau qui était libre, il faut mettre à
@@ -241,7 +256,7 @@ public class Utilisateur {
                     CreneauTache creneauTache = new CreneauTache(creneau, tache);
                     journée.getListCreneauxTaches().add(creneauTache);
                     calendrierPerso.journéesCalendrier.add(journée);
-                    System.out.println(calendrierPerso);
+                    //System.out.println(calendrierPerso);
                 }
             }
         }
@@ -738,6 +753,7 @@ public class Utilisateur {
         } else if (option == 2) { // Planification automatique des taches du projet
             planifierEnsembleTaches(planning, listeTachesProjet);
         }
+        historiqueProjets.add(projet);
 
     }
 
@@ -746,5 +762,9 @@ public class Utilisateur {
                 && creneau1.getHeureFin().isAfter(creneau2.getHeureDebut()) ||
                 creneau1.getHeureDebut().equals(creneau2.getHeureFin())
                 || creneau1.getHeureFin().equals(creneau2.getHeureDebut());
+    }
+
+    public void setPlanner(MyDesktopPlanner myDesktopPlanner) {
+        this.planner = planner ;
     }
 }
