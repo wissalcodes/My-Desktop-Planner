@@ -13,23 +13,26 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/*********************CONTROLLEUR DE LA PAGE DE LA PLANIFICATION MANUELLE DES TACHES D'UN PROJET***********************/
 
 public class PlannificationManuelleTacheProject {
      
 
     private String nomProjet ;
     private String description ; 
-
-
    private  Utilisateur user ;
+   private ArrayList <Tache> listeTache = new ArrayList<>() ;
+
 
     public void setUtilisateur(Utilisateur user){
         this.user = user ; 
@@ -41,7 +44,6 @@ public class PlannificationManuelleTacheProject {
         this.description = description ; 
     }
 
-    private ArrayList <Tache> listeTache = new ArrayList<>() ;
 
     @FXML
     private Button ajouterUneAutreTacheButton;
@@ -90,7 +92,7 @@ public class PlannificationManuelleTacheProject {
         return awtColor ;
     }
 
-    public LocalTime convertToTime(String timeString) {
+    public LocalTime convertToTime(String timeString) { 
         return LocalTime.parse(timeString);
     }
 
@@ -100,7 +102,7 @@ public class PlannificationManuelleTacheProject {
     }
     
     @FXML
-    void doneClick(ActionEvent event) {
+    void doneClick(ActionEvent event) { 
         Projet projet = new Projet(nomProjet,description,listeTache) ;
         projet.setListeTaches(listeTache);
         List<Projet> historiqueProjets = user.getHitoriqueProjets();
@@ -116,7 +118,7 @@ public class PlannificationManuelleTacheProject {
     
 
     @FXML
-    void ajouterUneAutreTacheButton(ActionEvent event) {
+    void ajouterUneAutreTacheButton(ActionEvent event) { //si on veut ajouter une autre tache au projet
 
         String nomTache = nomTacheField.getText() ;
         LocalDate dateJournée = journéePicker.getValue() ;
@@ -136,11 +138,32 @@ public class PlannificationManuelleTacheProject {
         Priorité.valueOf(priorité), durée, nomTache, 0) ;
     
         Creneau creneau = new Creneau(convertToTime(heureDebut), convertToTime(heureDebut).plusMinutes(durée)) ;
+try{
+
 
         user.planifierTacheManuelle(formatLocalDate( dateJournée ), creneau, tache, bloqué) ;
-        listeTache.add(tache) ;
+} 
+catch(DeadlinePassedException e ){
+    dateImpossible();
+    System.out.println("LA DATE DE LA TACHE EST AVANT LA DATE D'AUJOURD'HUI !");
+
+}
+    listeTache.add(tache) ;
 
     }
+
+    public void dateImpossible() { 
+
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Date journée impossible");
+        alert.setHeaderText(null);
+
+        alert.setContentText("LA DATE DE LA TACHE EST AVANT LA DATE D'AUJOURD'HUI !" + 
+        "Veuillez introduire une autre date de journée");
+
+        alert.showAndWait();
+        }
+
 
 }
 

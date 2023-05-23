@@ -17,10 +17,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+
+/*********************CONTROLLEUR DE LA PAGE DE LA RECHERCHE DE LA TACHE A MODIFIER***********************/
 
 public class modifierTacheController {
 
@@ -69,10 +73,9 @@ public void setUtilisateur(Utilisateur user){
                 try{
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/changerL'etat.fxml"));
                     Parent root = loader.load() ; 
-        
                     changerEtatTacheControlleur controleur = loader.getController() ;
                     controleur.setUtilisateur(user);
-                    controleur.setDate(date) ;
+                   // controleur.setDate(date) ;
                     controleur.setTache(tache);
                     controleur.init();
         
@@ -87,11 +90,25 @@ public void setUtilisateur(Utilisateur user){
                 
               }
         }
+        if(!trouve){ //si la tache n'existe pas 
+            tacheNonExistante() ;
+        }
 
         
      
 
     }
+    public void tacheNonExistante() { 
+
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Tache Introuvable");
+        alert.setHeaderText(null);
+
+        alert.setContentText("La tache que vous cherchez n'existe pas !" + 
+        "Veuillez introduire les informations correctes .");
+
+        alert.showAndWait();
+        }
 
 }
 

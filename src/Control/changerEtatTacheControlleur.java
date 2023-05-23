@@ -11,6 +11,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
+/*********************CONTROLLEUR DE LA PAGE DU CHANGEMANT DE L'ETAT D'UNE TACHE CHOISI ***********************/
+
 public class changerEtatTacheControlleur {
 
     private Utilisateur user ; 
@@ -32,15 +34,19 @@ public class changerEtatTacheControlleur {
     @FXML
     private TextField nouveauEtatField;
 
-    private LocalDate date ;
-    public void setDate(LocalDate date){
-        this.date = date ;
-    }
+ 
+
     @FXML
     void okModifier(ActionEvent event) {
 
       tache.setEtat(EtatTache.valueOf(nouveauEtatField.getText()));
-       user.getPlanner().updateUser(user) ;
+     if(nouveauEtatField.getText().equalsIgnoreCase("COMPLETED")){
+        user.setNbTacheRealisé( user.getNbTachesRéalisées()+1);
+     }
+        
+        user.getPlanner().updateUser(user) ;
+      
+     
 
     }
 

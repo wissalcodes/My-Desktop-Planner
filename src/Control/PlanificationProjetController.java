@@ -21,6 +21,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/*********************CONTROLLEUR DE LA PAGE DES INFO DU PROJET A PLANIFIER ***********************/
+
+
 public class PlanificationProjetController {
 
     private  Utilisateur user ;
@@ -38,7 +41,7 @@ public class PlanificationProjetController {
     private TextField nomProjectTextField;
 
     @FXML
-    void ajouterLesTaches(ActionEvent event) {
+    void ajouterLesTaches(ActionEvent event) {// afficher la page suivante : fixement des taches du projet
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/PlanificationManTacheProjet.fxml"));
             Parent root = loader.load() ; 

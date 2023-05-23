@@ -11,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+/*********************CONTROLLEUR DE LA PAGE DU MENU DE FONCTIONNALITEES***********************/
+
 public class PlanificationPageController {
 
     private Utilisateur user ;
@@ -39,8 +41,9 @@ public class PlanificationPageController {
     
     @FXML
     private Button consulterProjectButtron;
+
     @FXML
-    void afficherLesProjetsClick(ActionEvent event) {
+    void afficherLesProjetsClick(ActionEvent event) { //allez au affichage des projets
 
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/consulterProjet.fxml"));
@@ -62,7 +65,7 @@ public class PlanificationPageController {
     }
 
     @FXML
-    void afficherLesPlanningClick(ActionEvent event) {
+    void afficherLesPlanningClick(ActionEvent event) { //aller au affichage des plannings
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/consulterPlanning.fxml"));
             Parent root = loader.load() ; 
@@ -84,7 +87,7 @@ public class PlanificationPageController {
 
 
     @FXML
-    void planificationAutomatiqueClick(ActionEvent event) {
+    void planificationAutomatiqueClick(ActionEvent event) { //allez a la planification automatique
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/planningSettings.fxml"));
             Parent root = loader.load() ; 
@@ -124,10 +127,7 @@ public class PlanificationPageController {
 
     }
 
-    @FXML
-    void planifierTacheAvantDateLimiteClick(ActionEvent event) {
-
-    }
+ 
 
     @FXML
     void planifierTacheManuelleClick(ActionEvent event) {

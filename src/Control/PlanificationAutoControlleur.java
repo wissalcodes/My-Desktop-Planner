@@ -23,11 +23,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/*********************CONTROLLEUR DE LA PAGE DE FIXEMENT DE L'ENSEMBLE DES TACHES A PLANIFIER AUTOMATIQUEMENT ***********************/
 
 public class PlanificationAutoControlleur {
+
     private Utilisateur user ;
     private Planning planing ;
-    ArrayList<Tache> listTaches = new ArrayList<>() ;
+    private ArrayList<Tache> listTaches = new ArrayList<>() ;
     public void setUtilisateur(Utilisateur user){
     
         this.user = user ;
@@ -56,14 +58,8 @@ public class PlanificationAutoControlleur {
     @FXML
     private TextField duréeField;
 
-   // @FXML
-    //private TextField heuredEbutField;
-
     @FXML
     private TextField heurelimiteField;
-
-   // @FXML
-    //private DatePicker journéePicker;
 
     @FXML
     private Button lancerLaPlanificationButton;
@@ -103,8 +99,6 @@ public class PlanificationAutoControlleur {
     void ajouterAuListeDesTaches(ActionEvent event) {
         
         String nomTache = nomTacheField.getText() ;
-    //    LocalDate dateJournée = journéePicker.getValue() ;
-       // String heureDebut = heuredEbutField.getText() ;
         long durée = Integer.parseInt(duréeField.getText());
         LocalDate dateLimite = dateLimitePicker.getValue() ;
         String heureLimite = heurelimiteField.getText() ;
@@ -112,7 +106,8 @@ public class PlanificationAutoControlleur {
         String categorieName = categorieTextFiel.getText() ;
         Color couleurCategorie = colorPicker.getValue() ;
         boolean bloqué = bloquécheck.isSelected() ;
-        boolean decomposable = decomposableCheck.isSelected() ;    
+        boolean decomposable = decomposableCheck.isSelected() ;  
+
         Catégorie categorie = new Catégorie(categorieName, toAwtColor(couleurCategorie) );
         Tache tache;
          if ( !decomposable){
@@ -131,13 +126,11 @@ public class PlanificationAutoControlleur {
     }
 
     @FXML
-    void planifierEtNextPage(ActionEvent event) {
+    void planifierEtNextPage(ActionEvent event) { //afficher la page suivante : affichage du planing proposé
        Planning p =  user.planifierEnsembleTaches(planing, listTaches) ;
-       System.out.println("-------------------------------");
-       System.out.println(p.toString());
+    //   System.out.println("-------------------------------");
+      // System.out.println(p.toString());
 
-        //appel a planifierEnsemble des tache avec modification du corps
-        //en cas de etaler ou afficher direct
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/PlanningProposéAuto.fxml"));
             Parent root = loader.load() ; 

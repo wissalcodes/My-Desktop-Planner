@@ -24,6 +24,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+/*********************CONTROLLEUR DE LA PAGE DU FIXEMENT DE LA PERIODE DU PLANING A PLANIFIER AUTOMATIQUEMENT***********************/
+
 public class PlaningSettings   {
     Utilisateur user ;
 
@@ -51,26 +53,18 @@ public class PlaningSettings   {
     private Button nextButton;
 
     @FXML
-    void goFixéCreneauLibre(ActionEvent event) throws DateDébutException {
+    void goFixéCreneauLibre(ActionEvent event) throws DateDébutException { //allez a la page suivante : fixement des creneaux libres
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/fixerCreneauLibre.fxml"));
             Parent root = loader.load() ; 
             FixerCreneauLibreController controleur = loader.getController() ;
-//System.out.println(getDateDébut()) ;
              controleur.setUtilisateur(this.user);
-            //FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/UI/planningSettings.fxml"));
-             //Parent root2 = loader2.load() ;
-             //PlaningSettings controleur2 = loader2.getController() ;
-            // user.setControeurSetting(controleur2);
             user.setDateLimite(getDateFin());
             user.setStartDay(getDateDébut());
               Planning planing =  user.fixerPériodePlanning() ;
               controleur.setPlaning(planing )  ;
               controleur.setDateDebut(planing.getDateDébut().toString());
-              System.out.println(planing.toString() ) ;
-            //controleur.setDateDebut(formatLocalDate(dateDebutPicker.getValue()));
-            //controleur.setDateFin(formatLocalDate(dateFinPicker.getValue()));
-
+             System.out.println(planing.toString() ) ;
             Scene s = new Scene(root);
             Stage calendarStage = new Stage() ;
             calendarStage.setScene(s);

@@ -13,7 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Window;
-
+/******************************CONTROLLEUR DE LA PAGE D'INSCRIPTION EN CAS D'UTILISATEUR NON EXISTANT********************* */
 public class InscriptionController {
 
    private MyDesktopPlanner planner ;
@@ -43,8 +43,7 @@ public class InscriptionController {
         Calendrier calendrier = new Calendrier() ; // creation du nouveau user 
         Utilisateur newUser = new Utilisateur(pseudo);
         newUser.setCalendrierPerso(calendrier);
-        planner.ajouterUtilisateur(newUser) ; 
-        //planner.updateUser(newUser);
+        planner.ajouterUtilisateur(newUser) ;  //ajouter le nouveau user au liste des user dans MyDescktopPlanner
         ajoutSuccesLabel.setText("Utilisateur ajouté avec succées ! ");
         //planner.afficherListeUtilisateur() ;
       }

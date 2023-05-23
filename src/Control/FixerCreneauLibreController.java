@@ -27,19 +27,12 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage ;
 import Noyau.*;
+
+/*********************CONTROLLEUR DE LA PAGE DU FIXEMENT DES CRENEAU LIBRES LORS DE LA PLANIFICATION AUTO ***********************/
+
 public class FixerCreneauLibreController    {
 
-   // LocalDate dateDebut ; 
-    //LocalDate dateFin ; 
     Planning planning = new Planning() ;
-
-   /*  public void setDateDebut( LocalDate dateDebut ){
-        this.dateDebut = dateDebut ;
-    }
-    
-    public void setDateFin( LocalDate dateFin ){
-        this.dateFin = dateFin ;
-    }*/
 
     Utilisateur user ;
 
@@ -81,7 +74,7 @@ public class FixerCreneauLibreController    {
      }
 
     @FXML
-    void goChoisirTache(ActionEvent event) {
+    void goChoisirTache(ActionEvent event) { //afficher la page suivante : l'ensemble des taches a planifier automatiquement
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/ajouterTachePlanificationAuto.fxml"));
             Parent root = loader.load() ; 
@@ -89,7 +82,6 @@ public class FixerCreneauLibreController    {
             PlanificationAutoControlleur controleur = loader.getController() ;
             controleur.setUtilisateur(user);
             controleur.setPlaning(planning);
-           // controleur.initialiser();
 
             Scene s = new Scene(root);
             Stage calendarStage = new Stage() ;
@@ -101,7 +93,8 @@ public class FixerCreneauLibreController    {
         } 
 
     }
-    public LocalTime convertToTime(String timeString) {
+
+    public LocalTime convertToTime(String timeString) {  
         return LocalTime.parse(timeString);
     }
 
@@ -109,13 +102,11 @@ public class FixerCreneauLibreController    {
     void goNextJournéeClick(ActionEvent event) {
 
 
-
     }
 
     @FXML
     void lesMemeCreneau(ActionEvent event) {
        
-
         Creneau creneau = new Creneau(convertToTime(heureDebutTextField.getText()), 
         convertToTime(heureFinTextField.getText())) ;
             for (Journée journee : planning.getJournéesPlanifiées()) {
@@ -132,36 +123,5 @@ public class FixerCreneauLibreController    {
 
 
 
-/*//Scanner scanner = new Scanner(System.in);
-System.out.println(
-        "Choisissez une option:\n1. Définir des créneaux libres constants pour tout le planning.\n2. Définir des créneaux libres personnalisés par journée");
-int option = Integer.parseInt(scanner.nextLine());
-
-if (option == 1) {
-    System.out.println("Les créneaux libres pour tout le planning, sous le format HH-HH,HH-HH");
-    String input = scanner.nextLine();
-    String[] slots = input.split(",");
-    for (String slot : slots) {
-        String[] times = slot.split("-");
-        LocalTime heureDebut = LocalTime.parse(times[0], DateTimeFormatter.ofPattern("HH:mm"));
-        LocalTime heureFin = LocalTime.parse(times[1], DateTimeFormatter.ofPattern("HH:mm"));
-        Creneau creneau = new Creneau(heureDebut, heureFin);
-        for (Journée journee : planning.getJournéesPlanifiées()) {
-            journee.getListCreneauxLibres().add(creneau);
-        }
-    }
-} else if (option == 2) {
-    for (Journée journee : planning.getJournéesPlanifiées()) {
-      dateDebutLabel.setText(journee.getDate().toString());
-
-            Creneau creneau = new Creneau(heureDebut, heureFin);
-            journee.getListCreneauxLibres().add(creneau);
-
-        }
-    }
-} else {
-    System.out.println("Option invalide.");
-}
-planner.updateUser(this);*/
 
 }

@@ -16,11 +16,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
+/*********************CONTROLLEUR DE LA PAGE DE LA CONSULTATION DU CALENDRIER ***********************/
+
 
 public class ConsulterPlaningController {
 private Utilisateur user ;
-
-
 
 public void setUtilisateur(Utilisateur user){
 
@@ -29,14 +29,10 @@ public void setUtilisateur(Utilisateur user){
 @FXML
 private Button modifierEtatTacheButton;
 
+ @FXML
+ private ListView<String> listView;
     
-        @FXML
-        private ListView<String> listView;
-    
-   
-    
-
-    public void initialiser(){
+    public void initialiser(){// afficher les taches qui existent
 
         ObservableList<String> listViewPlanning = FXCollections.observableArrayList();
         Iterator<Journée> it = user.getCalendrierPerso().getJournéesCalendrier().iterator();
@@ -59,7 +55,6 @@ void modifierEtatClick(ActionEvent event) {
 
         modifierTacheController controleur = loader.getController() ;
         controleur.setUtilisateur(user);
-       // controleur.initialiser();
 
         Scene s = new Scene(root);
         Stage calendarStage = new Stage() ;

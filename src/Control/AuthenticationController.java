@@ -17,6 +17,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+/*********************CONTROLLEUR DE LA PAGE D'AUTHENTIFICATION ***********************/
 public class AuthenticationController {
 
     protected MyDesktopPlanner planner = new MyDesktopPlanner() ; 
@@ -33,33 +34,12 @@ public class AuthenticationController {
     @FXML
     private Button quitterButton;
 
-/* 
-    public AuthenticationController(MyDesktopPlanner planner){
 
-        this.planner = planner ;
-
-    }
-    */
     public void setMyDesktop(MyDesktopPlanner planner){
         this.planner = planner ; 
     }
 
-    /*void afficherPage( FXMLLoader loader , ){
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-            Parent root = loader.load() ; 
-            InscriptionController inscrCtrl = loader.getController() ;
-            inscrCtrl.setMyDesktop(planner);
-            Scene s = new Scene(root);
-            Stage calendarStage = new Stage() ;
-            calendarStage.setScene(s);
-            calendarStage.show();
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-      
-    }*/
+   
       
     @FXML
         void clickAuthentifier(ActionEvent event) {
@@ -68,14 +48,13 @@ public class AuthenticationController {
         
             if (existe) {
                 try {
-                    // Read data from the file
-                    planner.chargerUtilisateursFichier();
+                    planner.chargerUtilisateursFichier();     // Read data from the file
+
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/PlannificationPage.fxml"));
                     Parent root = loader.load();
                     PlanificationPageController controleur = loader.getController();
                     controleur.setUtilisateur(planner.getUtilisateurParPseudo(pseudo));
         
-                    // Rest of the code remains the same
                     Scene s = new Scene(root);
                     Stage calendarStage = new Stage();
                     calendarStage.setScene(s);

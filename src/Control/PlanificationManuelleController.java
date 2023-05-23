@@ -18,18 +18,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.paint.Color;
 import java.awt.color.*;
+/*********************CONTROLLEUR DE LA PAGE DE LA PLANIFICATION MANUELLE ***********************/
+
 
 public class PlanificationManuelleController {
 
     private Utilisateur user ;
-   private  TacheSimple tache ; 
-    public TacheSimple getTache(){
-        return tache ; 
-    }
     
     public void setUtilisateur(Utilisateur user){
         this.user=user ;
-    
     
     }
     
@@ -66,7 +63,6 @@ public class PlanificationManuelleController {
 
     @FXML
     private TextField prioritéTextField;
-// men string ila localTime
 
 public java.awt.Color toAwtColor(javafx.scene.paint.Color fxColor){
         int red = (int) (fxColor.getRed() * 255);
@@ -86,7 +82,6 @@ public java.awt.Color toAwtColor(javafx.scene.paint.Color fxColor){
         return LocalDate.parse( date.format(formatter)) ;
     }
 
-//men string ila localTime
     @FXML
     void planifierTacheManuelle(ActionEvent event) {
 
@@ -112,14 +107,16 @@ public java.awt.Color toAwtColor(javafx.scene.paint.Color fxColor){
     CreneauTache creneauTache = new CreneauTache(creneau, tache) ;
 
     creneauTache.setEstBloqué(bloqué);
-
+try{
     user.planifierTacheManuelle(formatLocalDate( dateJournée ), creneau, tache, bloqué) ;
-    
-    user.getCalendrierPerso().afficherLesJournéePlanifié(); 
-    this.tache = tache ;
-  user.getPlanner().updateUser(user);
 
-
+}
+catch(DeadlinePassedException e){
+    dateImpossible() ;
+    System.out.println("DATE DE LA TACHE AVANT LA DATE D'AUJOURDUI !");
+}
+ 
+  user.getPlanner().updateUser(user); // sauvgarder les changement du user
 
     }
 
@@ -133,4 +130,15 @@ public java.awt.Color toAwtColor(javafx.scene.paint.Color fxColor){
         alert.showAndWait();
         }
 
+        public void dateImpossible() { 
+ 
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Date journée impossible");
+            alert.setHeaderText(null);
+    
+            alert.setContentText("LA DATE DE LA TACHE EST AVANT LA DATE D'AUJOURD'HUI !" + 
+            "Veuillez introduire une autre date de journée");
+    
+            alert.showAndWait();
+            }
 }

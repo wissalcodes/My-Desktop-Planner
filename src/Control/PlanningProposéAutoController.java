@@ -26,6 +26,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import javafx.scene.control.ListView;
+/*********************CONTROLLEUR DE LA PAGE D'AFFICHAGE DU PLANNING PROPOSE PAR LA PLANIFICATION AUTOMATIQUE ***********************/
+
 
 public class PlanningProposéAutoController {
     private Utilisateur user ;
@@ -41,6 +43,15 @@ public class PlanningProposéAutoController {
         this.planing = p ;
     }
 
+    @FXML
+    private Label reponseLable;
+    @FXML
+    private Button accepterButton;
+
+    @FXML
+    private ListView<String> listView;
+
+
 public void init(){
     ObservableList<String> listViewPlanning = FXCollections.observableArrayList();
     Iterator<Journée> it = planing.getJournéesPlanifiées().iterator();
@@ -54,14 +65,7 @@ public void init(){
     listView.setItems(listViewPlanning) ;
 
 }
-    @FXML
-    private Button accepterButton;
-
-    @FXML
-    private ListView<String> listView;
-
-    @FXML
-    private Button refuserButton;
+ 
 
     @FXML
     void AccepterPlanning(ActionEvent event) {
@@ -70,14 +74,6 @@ public void init(){
         reponseLable.setText("Planing Ajouté avec succées ") ;
     }
 
-    @FXML
-    private Label reponseLable;
-
-    @FXML
-    void refuserPlanning(ActionEvent event) {
-        reponseLable.setText("Planing Refusé ") ;
-
-    }
 
 }
 

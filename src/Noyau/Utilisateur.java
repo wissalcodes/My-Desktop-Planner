@@ -15,6 +15,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class Utilisateur implements Serializable {
+
     private MyDesktopPlanner planner;
     private String pseudo;
     private int nbMinTaches = 1;
@@ -22,35 +23,38 @@ public class Utilisateur implements Serializable {
     protected Set<Catégorie> listeCatégories = new HashSet<>();
     protected List<Tache> listeTachesUnscheduled = new ArrayList<>();
     private static int duréeMinimale = 30;
-    //
     private int nbTachesRéalisées = 0 ;
- public void setNbTacheRealisé(int i){
-    nbTachesRéalisées = i ;
+    private List<Projet> historiqueProjets = new ArrayList<>();
+    private Calendrier calendrierPerso = new Calendrier();
+    private List<Catégorie> listCatégories;
+
+    public Utilisateur(String pseudo) {
+        this.pseudo = pseudo;
+        planner = new MyDesktopPlanner();
+    }
+
+    public void setNbTacheRealisé(int i){
+    this.nbTachesRéalisées = i ;
  }
  
  public int getNbTachesRéalisées(){
     return this.nbTachesRéalisées ;
  }
     
-   // private transient PlaningSettings controleurSettings ;
  private LocalDate startDate ;
  private LocalDate dateLimite ;
+
  public void setStartDay( LocalDate startDate){
     this.startDate = startDate ;
  }
  public void setDateLimite( LocalDate dateLimite){
     this.dateLimite = dateLimite ;
  }
-    /*public void setControeurSetting(PlaningSettings controleurSettings){
-        this.controleurSettings = controleurSettings ;
-    }*/
-
+ 
     public MyDesktopPlanner getPlanner() {
         return planner;
     }
 
-    // durée minimale de 30 minutes, sera vérifié lors de la décomposition d'un
-    // créneau
     public Set<Catégorie> getListeCatégories() {
         return listeCatégories;
     }
@@ -71,16 +75,8 @@ public class Utilisateur implements Serializable {
 
     }
 
-    private List<Projet> historiqueProjets = new ArrayList<>();
-    private Calendrier calendrierPerso = new Calendrier();
-    private List<Catégorie> listCatégories;
+ 
 
-    public Utilisateur(String pseudo) {
-        this.pseudo = pseudo;
-        planner = new MyDesktopPlanner();
-    }
-
-    // getters and setters
     public String getPseudo() {
         return pseudo;
     }
@@ -128,29 +124,6 @@ public class Utilisateur implements Serializable {
         planner.updateUser(this);
     }
 
-    /*
-     * public void planifierProjetManuel(Projet projet) {
-     * ArrayList<Tache> listeTachesProjet = new ArrayList<>(null);
-     * listeTachesProjet = projet.getListeTaches();
-     * Scanner scanner = new Scanner(System.in);
-     * Iterator iterator = listeTachesProjet.iterator();
-     * while (iterator.hasNext()) {
-     * // à remplacer par le controlleur de la planification d'une seule tache
-     * manuelle
-     * TacheSimple tache = (TacheSimple) iterator.next();
-     * System.out.println("Introduisez la journée yyyy-mm-dd: ");
-     * String dateTacheString = scanner.nextLine();
-     * LocalDate dateTache = LocalDate.parse(dateTacheString);
-     * System.out.println("Introduisez l'heure début du créneau souhaité: HH:mm");
-     * String creneauString = scanner.nextLine();
-     * LocalTime heureDebut = LocalTime.parse(creneauString);
-     * LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
-     * Creneau creneau = new Creneau(heureDebut, heureFin);
-     * planifierTacheManuelle(dateTache, creneau, tache, );
-     * }
-     * // planner.updateUser(this);
-     * }
-     */
 
     @Override
     public int hashCode() {
@@ -173,21 +146,11 @@ public class Utilisateur implements Serializable {
     }
 
     public Planning fixerPériodePlanning( ) throws DateDébutException {
-       // Scanner scanner = new Scanner(System.in);
-        //System.out.print("Date de début du planning (yyyy-mm-dd): ");
-        
-      //  FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/planningSettings.fxml"));
-       // Parent root = loader.load() ;
-       // PlaningSettings controleur = loader.getController() ;
-      //  LocalDate startDate = LocalDate.now();
-        //LocalDate startDate = controleurSettings.getDateDébut() ;
 
         if (this.startDate.isBefore(LocalDate.now()))
             throw new DateDébutException();
 
         TreeSet<Journée> journéesPlanifiées = new TreeSet<>();
-        //System.out.print("Date de fin du planning (yyyy-mm-dd): ");
-       // LocalDate dateLimite = controleurSettings.getDateFin() ;
 
         // Itérer sur l'ensemble des journées du calendrier personnel de l'utilisateur
         // authentifié
@@ -245,11 +208,13 @@ public class Utilisateur implements Serializable {
         return planning;
     }
 
-    public Journée planifierTacheManuelle(LocalDate tacheDate, Creneau creneau, TacheSimple tache, boolean bloqué) {
+    public Journée planifierTacheManuelle(LocalDate tacheDate, Creneau creneau, TacheSimple tache, boolean bloqué) throws DeadlinePassedException{
         Scanner scanner1 = new Scanner(System.in);
         Journée journée = calendrierPerso.getJournéeByDate(tacheDate);
+        if(tacheDate.isBefore(LocalDate.now())) throw new DeadlinePassedException() ;
+        
         // cas 1 : ce créneau ne figure pas dans les créneaux libres
-        if (journée.getListCreneauxLibres().contains(creneau) == false) {
+       else{ if (journée.getListCreneauxLibres().contains(creneau) == false) {
             // S'il est occupé par une autre tache
             Iterator iterator = journée.getListCreneauxTaches().iterator();
             while (iterator.hasNext()) {
@@ -258,39 +223,9 @@ public class Utilisateur implements Serializable {
 
                     PlanificationManuelleController.impossiblePlanifier();
 
-                    /*
-                     * //System.out.println(
-                     * "Impossible de programmer la tache dans ce créneau, car il est réservé pour une deuxième tache.\n1. L'ajouter à la liste des taches non-planifiées.\n2. Planifier dans un autre créneau"
-                     * );
-                     * int option = Integer.parseInt(scanner1.nextLine());
-                     * if (option == 1) {
-                     * listeTachesUnscheduled.add(tache);
-                     * break;
-                     * } else if (option == 2) {
-                     * Scanner scanner = new Scanner(System.in);
-                     * System.out.println("Introduisez la journée yyyy-mm-dd: ");
-                     * String dateTacheString = scanner.nextLine();
-                     * LocalDate dateTache = LocalDate.parse(dateTacheString);
-                     * System.out.println("Introduisez l'heure début du créneau souhaité: HH:mm");
-                     * String creneauString = scanner1.nextLine();
-                     * LocalTime heureDebut = LocalTime.parse(creneauString);
-                     * LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
-                     * creneau = new Creneau(heureDebut, heureFin);
-                     * planifierTacheManuelle(tacheDate, creneau, tache);
-                     * break;
-                     * }
-                     */
                 }
             }
-            /*
-             * System.out.
-             * println("Souhaitez vous bloquer ce créneau pour cette tache? (1/0)"); // le
-             * créneau ne sera
-             * // pas // touchée lors
-             * // de la
-             * // replanification // //
-             * // replanification
-             */
+     
             CreneauTache creneauTache = new CreneauTache(creneau, tache);
             if (bloqué) {
                 creneauTache.setEstBloqué(true);
@@ -308,11 +243,8 @@ public class Utilisateur implements Serializable {
                 Creneau creneau2 = (Creneau) iterator.next();
                 if (creneau2.contientCreneau(creneau)) { // Si le créneau spécifié pour la tache est inclu dans un
                                                          // créneau libre de la journée
-                    TreeSet<Creneau> resultatDécompositionCreneau = creneau2.decompositionCreneau(creneau); // Décomposer
-                                                                                                            // le
-                                                                                                            // créneau
-                                                                                                            // en
-                                                                                                            // question
+                    TreeSet<Creneau> resultatDécompositionCreneau = creneau2.decompositionCreneau(creneau); // Décomposer le crenau en qst
+                                                                                                           
                     // Mise-à-jour des créneaux libres de la journée en question
                     journée.getListCreneauxLibres().addAll(resultatDécompositionCreneau);
                     CreneauTache creneauTache = new CreneauTache(creneau, tache);
@@ -322,6 +254,7 @@ public class Utilisateur implements Serializable {
                 }
             }
         }
+    }
         planner.updateUser(this);
 
         return (journée);
@@ -544,7 +477,12 @@ public class Utilisateur implements Serializable {
             LocalTime heureDebut = LocalTime.parse(creneauString);
             LocalTime heureFin = heureDebut.plusMinutes(dureeTache);
             Creneau creneau = new Creneau(heureDebut, heureFin);
-            planifierTacheManuelle(dateTache, creneau, tache, false);
+            try{
+                planifierTacheManuelle(dateTache, creneau, tache, false);
+            }
+                catch( DeadlinePassedException e ){
+                    System.out.println("LA DATE DE LA TACHE EST AVANT LA DATE D'AUJOURD'HUI !!") ;
+                }
         }
         if (option == 2) {
             Planning planning = new Planning();
@@ -589,23 +527,6 @@ public class Utilisateur implements Serializable {
             if (option == 2) {
                 System.out.println("Planning supprimé avec succès.");
             }
-            // Not yet.
-            // if(option ==3){
-            // System.out.println("*****Modification du planning*****");
-            // System.out.println("1. Permuter entre 2 taches\n2. Changer le créneau d'une
-            // tache");
-            // option = Integer.parseInt(scanner1.nextLine());
-            // if(option==1){
-
-            // }if(option==2){
-
-            // }else{
-            // System.out.println("choix invalide");
-            // }
-
-            // }
-            // getCalendrierPerso().journéesCalendrier.addAll(planning.getJournéesPlanifiées());
-            // proposition du système.
 
         }
         if (option == 3) { // Planification d'une tache avant une date limite
@@ -667,7 +588,7 @@ public class Utilisateur implements Serializable {
         planner.updateUser(this);
     }
 
-    // Planification automatique d'une tache
+    // RePlanification automatique d'une tache
     void planifierTacheAvantDateLimite(Tache tache, LocalDate dateLimite) {
         TreeSet<Journée> journéesPlanifiées = new TreeSet<>();
 
@@ -817,7 +738,13 @@ public class Utilisateur implements Serializable {
                 LocalTime heureDebut = LocalTime.parse(creneauString);
                 LocalTime heureFin = heureDebut.plusMinutes(tache.getDurée());
                 Creneau creneau = new Creneau(heureDebut, heureFin);
-                planifierTacheManuelle(dateTache, creneau, tache, false);
+                try{
+                    planifierTacheManuelle(dateTache, creneau, tache, false);
+
+                }
+                catch( DeadlinePassedException e ){
+                    System.out.println("LA DATE DE LA TACHE EST AVANT LA DATE D'AUJOURD'HUI !!") ;
+                }
 
             }
         } else if (option == 2) { // Planification automatique des taches du projet
