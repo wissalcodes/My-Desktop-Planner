@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 public class PlanificationPageController {
 
-    Utilisateur user ;
+    private Utilisateur user ;
     public void setUtilisateur(Utilisateur user){
         this.user=user ;
     
@@ -82,8 +82,24 @@ public class PlanificationPageController {
 
     }
 
+
     @FXML
     void planificationAutomatiqueClick(ActionEvent event) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/planningSettings.fxml"));
+            Parent root = loader.load() ; 
+
+            PlaningSettings controleur = loader.getController() ;
+            controleur.setUtilisateur(this.user);
+
+            Scene s = new Scene(root);
+            Stage calendarStage = new Stage() ;
+            calendarStage.setScene(s);
+            calendarStage.show();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
 
     }
 
@@ -133,4 +149,27 @@ public class PlanificationPageController {
 
     }
 
+    @FXML
+    private Button statistiqueButton;
+    @FXML
+    void statistiqueClick(ActionEvent event) {
+  try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/statistique.fxml"));
+            Parent root = loader.load() ; 
+
+            StatistiqueController controleur = loader.getController() ;
+            controleur.setUtilisateur(this.user);
+            controleur.mettreAjOUR();
+            Scene s = new Scene(root);
+            Stage calendarStage = new Stage() ;
+            calendarStage.setScene(s);
+            calendarStage.show();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+
+    }
 }
+
+

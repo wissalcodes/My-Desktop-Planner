@@ -106,6 +106,7 @@ public class PlannificationManuelleTacheProject {
         List<Projet> historiqueProjets = user.getHitoriqueProjets();
 
         historiqueProjets.add(projet) ;
+        this.user.getPlanner().updateUser(user);
         Iterator<Projet> itP = historiqueProjets.iterator();
        
         while(itP.hasNext()){

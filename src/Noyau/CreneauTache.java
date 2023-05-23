@@ -2,7 +2,7 @@ package Noyau;
 
 import java.io.Serializable;
 
-public class CreneauTache implements Serializable {
+public class CreneauTache implements Serializable,Comparable <CreneauTache>{
     private static int dureeMinimale = 30; // durée minimale de 30 minutes, sera vérifié lors de la décomposition d'un
                                            // créneau
 
@@ -55,5 +55,10 @@ public class CreneauTache implements Serializable {
     @Override
     public String toString() {
         return "CreneauTache [" + creneau + ", " + tache + ", estBloqué=" + estBloqué + "]";
+    }
+
+    @Override
+    public int compareTo(CreneauTache o) {
+        return this.getCreneau().getHeureDebut().compareTo(o.getCreneau().getHeureDebut());
     }
 }

@@ -1,11 +1,15 @@
 package Noyau;
 
 import Control.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+
 import java.util.*;
 
 import javax.swing.event.ListDataEvent;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -18,6 +22,28 @@ public class Utilisateur implements Serializable {
     protected Set<Catégorie> listeCatégories = new HashSet<>();
     protected List<Tache> listeTachesUnscheduled = new ArrayList<>();
     private static int duréeMinimale = 30;
+    //
+    private int nbTachesRéalisées = 0 ;
+ public void setNbTacheRealisé(int i){
+    nbTachesRéalisées = i ;
+ }
+ 
+ public int getNbTachesRéalisées(){
+    return this.nbTachesRéalisées ;
+ }
+    
+   // private transient PlaningSettings controleurSettings ;
+ private LocalDate startDate ;
+ private LocalDate dateLimite ;
+ public void setStartDay( LocalDate startDate){
+    this.startDate = startDate ;
+ }
+ public void setDateLimite( LocalDate dateLimite){
+    this.dateLimite = dateLimite ;
+ }
+    /*public void setControeurSetting(PlaningSettings controleurSettings){
+        this.controleurSettings = controleurSettings ;
+    }*/
 
     public MyDesktopPlanner getPlanner() {
         return planner;
@@ -146,17 +172,23 @@ public class Utilisateur implements Serializable {
         return Objects.equals(pseudo, other.pseudo);
     }
 
-    public Planning fixerPériodePlanning() throws DateDébutException {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Date de début du planning (yyyy-mm-dd): ");
-        LocalDate startDate = LocalDate.now();
-        startDate = LocalDate.parse(scanner.nextLine());
-        if (startDate.isBefore(LocalDate.now()))
+    public Planning fixerPériodePlanning( ) throws DateDébutException {
+       // Scanner scanner = new Scanner(System.in);
+        //System.out.print("Date de début du planning (yyyy-mm-dd): ");
+        
+      //  FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/planningSettings.fxml"));
+       // Parent root = loader.load() ;
+       // PlaningSettings controleur = loader.getController() ;
+      //  LocalDate startDate = LocalDate.now();
+        //LocalDate startDate = controleurSettings.getDateDébut() ;
+
+        if (this.startDate.isBefore(LocalDate.now()))
             throw new DateDébutException();
 
         TreeSet<Journée> journéesPlanifiées = new TreeSet<>();
-        System.out.print("Date de fin du planning (yyyy-mm-dd): ");
-        LocalDate dateLimite = LocalDate.parse(scanner.nextLine());
+        //System.out.print("Date de fin du planning (yyyy-mm-dd): ");
+       // LocalDate dateLimite = controleurSettings.getDateFin() ;
+
         // Itérer sur l'ensemble des journées du calendrier personnel de l'utilisateur
         // authentifié
         for (Journée journée : getCalendrierPerso().getJournéesCalendrier()) {
@@ -341,6 +373,7 @@ public class Utilisateur implements Serializable {
                             // On planifie la tache
                             // Tester si décomposer le créneau ou bien l'allouer entièrement à la tache
                             if (durationMinutes - tache.getDurée() > duréeMinimale) { // Il y'a décomposition
+                                
                                 LocalTime creneau1fin = début.plusMinutes(tache.getDurée());
                                 LocalTime creneau2Début = début.plusMinutes(tache.getDurée());
                                 Creneau creneau1 = new Creneau(début, creneau1fin);
@@ -420,18 +453,21 @@ public class Utilisateur implements Serializable {
                 listeTachesUnscheduled.add(tache);
             }
         }
-        // Modification de la date de fin du planning
-        if (!listeTachesUnscheduled.isEmpty()) {
+       // Modification de la date de fin du planning
+      /*   if (!listeTachesUnscheduled.isEmpty()) {
+            //appel a etaler ou pas
             Scanner scanner1 = new Scanner(System.in);
             System.out.println("\n\nListe des taches non planifiés: " + listeTachesUnscheduled);
             System.out.println(
                     "\nIl reste des taches qui n'ont pas pu etre planifiées.Souhaitez-vous étaler la période du planning jusqu'à la planification de toutes les taches? (1/0)");
             int option = Integer.parseInt(scanner1.nextLine());
             if (option == 0) {
+                 //pas
                 // Sauvegarder les taches avec l'état "UNSCHEDULED"
                 this.listeTachesUnscheduled = listeTachesUnscheduled;
                 planning.setDateFin(lastDateWithTask);
             } else {
+                //etaler
                 // Les planifier dans les jours qui suivent.
                 // 1. Spécifier les créneaux libres des jours qui suivent
                 TreeSet<Journée> journéesPlanifiées = new TreeSet<>();
@@ -453,7 +489,7 @@ public class Utilisateur implements Serializable {
             }
             // afficher et retourner le planning proposé par le système
             System.out.println("\n\nPlanning proposé " + planning);
-        }
+        }*/
         planner.updateUser(this);
         return (planning);
     }
@@ -800,5 +836,14 @@ public class Utilisateur implements Serializable {
 
     public void setPlanner(MyDesktopPlanner planner) {
         this.planner = planner;
+    }
+
+    public void consulterHistoriquePlannings() {
+        Iterator<Planning> iterator = historiquePlannings.iterator();
+        while (iterator.hasNext()) {
+            Planning planning = (Planning) iterator.next();
+            planning.consulterPlanning();
+            //int tabBadge[] = planning.getNbBadges() ;
+        }
     }
 }

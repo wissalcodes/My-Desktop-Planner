@@ -42,7 +42,9 @@ public class InscriptionController {
         if( user == null) { // pseudo non existant deja 
         Calendrier calendrier = new Calendrier() ; // creation du nouveau user 
         Utilisateur newUser = new Utilisateur(pseudo);
-        planner.getListUtilisateurs().add(newUser) ; 
+        newUser.setCalendrierPerso(calendrier);
+        planner.ajouterUtilisateur(newUser) ; 
+        //planner.updateUser(newUser);
         ajoutSuccesLabel.setText("Utilisateur ajouté avec succées ! ");
         //planner.afficherListeUtilisateur() ;
       }

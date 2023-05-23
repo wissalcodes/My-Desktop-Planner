@@ -30,7 +30,9 @@ public class PlanificationManuelleController {
     public void setUtilisateur(Utilisateur user){
         this.user=user ;
     
+    
     }
+    
 
     @FXML
     private ColorPicker colorPicker;
@@ -115,6 +117,9 @@ public java.awt.Color toAwtColor(javafx.scene.paint.Color fxColor){
     
     user.getCalendrierPerso().afficherLesJournéePlanifié(); 
     this.tache = tache ;
+  user.getPlanner().updateUser(user);
+
+
 
     }
 

@@ -29,7 +29,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage)   {
-       
+       /* 
  // LES CATEGORIES 
         Catégorie cat1 = new Catégorie ( "STUDY", Color.BLUE) ;
         Catégorie cat2 = new Catégorie("HEALTH", Color.GREEN);
@@ -67,14 +67,14 @@ public class Main extends Application {
 // LES USERS AVEC LEURS PLANNING ET CALENDRIERS ET LISTES DES CATEGORIES
  
              Calendrier calendrier1 = new Calendrier() ;
-             Utilisateur user1 = new Utilisateur("FARAH") ;
-             user1.setCalendrierPerso(calendrier1);
-             calendrier1.getJournéesCalendrier().add(journée1) ;
+           /*   Utilisateur user1 = new Utilisateur("FARAH") ;
+             //user1.setCalendrierPerso(calendrier1);
+             //calendrier1.getJournéesCalendrier().add(journée1) ;
               //calendrier1.toString() ;
              calendrier1.afficherLesJournéePlanifié();
-            // System.out.println(calendrier1);
+            // System.out.println(calendrier1);*/
 
-             user1.setListeCatégories(listeCategorie);
+            /*  user1.setListeCatégories(listeCategorie);
              TreeSet<Planning> listeDesPlannings = new TreeSet<>() ;
              listeDesPlannings.add(planning1);
              user1.setHistoriquePlannings(listeDesPlannings);
@@ -83,7 +83,7 @@ public class Main extends Application {
         ArrayList<Utilisateur> userSet = new ArrayList<Utilisateur>();
         userSet.add(user1);
         MyDesktopPlanner planner = new MyDesktopPlanner() ;
-        planner.setListUtilisateurs(userSet); 
+        planner.setListUtilisateurs(userSet); */
 
 
 
@@ -91,8 +91,12 @@ try{
      FXMLLoader loader = new FXMLLoader(getClass().getResource("Authentification.fxml")) ;
       Parent root = loader.load() ;
      AuthenticationController controller = loader.getController() ;
-
+   //  Utilisateur user1 = new Utilisateur("") ;
+    MyDesktopPlanner planner = new MyDesktopPlanner() ;
+   // planner.ajouterUtilisateur(user1);
+    planner.chargerUtilisateursFichier(); 
      controller.setMyDesktop(planner);
+    // planner.chargerUtilisateursFichier(); 
      Scene s = new Scene(root);
      primaryStage.setScene(s);
      primaryStage.show(); 

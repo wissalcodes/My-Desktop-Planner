@@ -60,4 +60,56 @@ public class Planning implements Comparable<Planning>, Serializable {
     public int compareTo(Planning other) {
         return this.dateDébut.compareTo(other.getDateDébut());
     }
+
+    public void consulterPlanning() {
+        consulterBadgesPlanning();
+        Iterator<Journée> iterator = journéesPlanifiées.iterator();
+        int sum = 0;
+        while (iterator.hasNext()) {
+            Journée j = iterator.next();
+            sum += j.getNbTachesRéalisées();
+        }
+        System.out.println("Nombre de taches réalisées dans le planning: " + sum);
+    }
+
+    public void consulterBadgesPlanning() {
+        Iterator<Journée> iterator = journéesPlanifiées.iterator();
+        while (iterator.hasNext()) {
+            Journée j = iterator.next();
+            if (j.getBadgeJournalier() == Badge.GOOD) {
+                nbBadges[0]++;
+            }
+            if (j.getBadgeJournalier() == Badge.VERYGOOD) {
+                nbBadges[1]++;
+            }
+            if (j.getBadgeJournalier() == Badge.EXCELLENT) {
+                nbBadges[2]++;
+            }
+        }
+    }
+
+    protected int nbBadges[] = { 1, 0, 0 }; // nombre de badge GOOD[0],VERYGOOD[1],EXCELLENT[2] obtenus pendant le
+    // planning
+
+public void setBadge(int i) {
+nbBadges[i] += 1;
+}
+
+public int[] getNbBadges() {
+return nbBadges;
+}
+
+public void setNbBadges(int[] nbBadges) {
+this.nbBadges = nbBadges;
+}
+
+private int nbEncouragement;
+
+public int getNbEncouragement() {
+return nbEncouragement;
+}
+
+public void setNbEncouragement(int nbEncouragement) {
+this.nbEncouragement = nbEncouragement;
+}
 }

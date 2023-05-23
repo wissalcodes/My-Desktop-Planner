@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Control.modifierTacheController">
+   <children>
+      <DatePicker fx:id="datePicker" layoutX="213.0" layoutY="66.0" />
+      <TextField fx:id="heureField" layoutX="226.0" layoutY="143.0" />
+      <Label layoutX="56.0" layoutY="70.0" text="la date" />
+      <Label layoutX="56.0" layoutY="147.0" text="l'heure" />
+      <Button fx:id="rechercherButoon" layoutX="264.0" layoutY="225.0" mnemonicParsing="false" onAction="#rechercher" text="rechercher" />
+      <Label layoutX="213.0" layoutY="25.0" text="rechercher la tache a modifier" />
+   </children>
+</AnchorPane>

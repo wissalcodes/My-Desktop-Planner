@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 
 public class AuthenticationController {
 
-    protected MyDesktopPlanner planner ; 
+    protected MyDesktopPlanner planner = new MyDesktopPlanner() ; 
 
     @FXML
     private Button authetifierButton;
@@ -62,31 +62,31 @@ public class AuthenticationController {
     }*/
       
     @FXML
-    void clickAuthentifier(ActionEvent event) {
-       String pseudo = pseudoTextField.getText() ;
-       boolean existe = this.planner.rechercheUtilisateur(pseudo);
-
-        if(existe){
-            try{
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/PlannificationPage.fxml"));
-                Parent root = loader.load() ; 
-                PlanificationPageController controleur = loader.getController() ;
-                controleur.setUtilisateur(planner.getUtilisateurParPseudo(pseudo));
-                 //controleur.initCalendar( planner.getUtilisateurParPseudo(pseudo))  ;
-                //Appleler le constructeur du calendarControlleur pour initialiser la page 
-                Scene s = new Scene(root);
-                Stage calendarStage = new Stage() ;
-                calendarStage.setScene(s);
-                calendarStage.show();
-            }
-            catch(IOException e){
-                e.printStackTrace();
+        void clickAuthentifier(ActionEvent event) {
+            String pseudo = pseudoTextField.getText();
+            boolean existe = this.planner.rechercheUtilisateur(pseudo);
+        
+            if (existe) {
+                try {
+                    // Read data from the file
+                    planner.chargerUtilisateursFichier();
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/PlannificationPage.fxml"));
+                    Parent root = loader.load();
+                    PlanificationPageController controleur = loader.getController();
+                    controleur.setUtilisateur(planner.getUtilisateurParPseudo(pseudo));
+        
+                    // Rest of the code remains the same
+                    Scene s = new Scene(root);
+                    Stage calendarStage = new Stage();
+                    calendarStage.setScene(s);
+                    calendarStage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                matriculeNonTrouve(pseudo);
             }
         }
-        else{
-            matriculeNonTrouve(pseudo);
-        }
-    }
 
     @FXML
     void inscrire(ActionEvent event) { 

@@ -33,6 +33,7 @@
                      </font>
                   </Label>
                   <Button fx:id="consulterProjectButtron" layoutX="132.0" layoutY="299.0" mnemonicParsing="false" onAction="#afficherLesProjetsClick" prefHeight="26.0" prefWidth="184.0" text="Consulter mes Projets" />
+                  <Button fx:id="statistiqueButton" layoutX="189.0" layoutY="337.0" mnemonicParsing="false" onAction="#statistiqueClick" text="Statistique" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="400.0" prefWidth="78.0" style="-fx-background-color: #00504c;">

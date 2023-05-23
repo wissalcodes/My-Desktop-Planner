@@ -19,9 +19,8 @@ public class Journée implements Comparable<Journée>, Serializable {
     public Journée() {
     }
 
-    private LocalDate date; // Date de la journée sous le format aaaa-mm-jj
-    private TreeSet<CreneauTache> listCreneauxTaches = new TreeSet<>(
-            Comparator.comparing(CreneauTache::getCreneau, Comparator.comparing(Creneau::getHeureDebut)));
+    private LocalDate date ; // Date de la journée sous le format aaaa-mm-jj
+    private TreeSet<CreneauTache> listCreneauxTaches = new TreeSet<>();
     private Badge badgeJournalier;
     private int nbTachesPrévues;
     private int nbTachesRéalisées;
@@ -60,6 +59,7 @@ public class Journée implements Comparable<Journée>, Serializable {
     }
 
     public int getNbTachesRéalisées() {
+        
         return nbTachesRéalisées;
     }
 
