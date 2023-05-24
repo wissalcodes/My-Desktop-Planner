@@ -13,9 +13,9 @@ public class TacheDécomposable extends Tache implements Serializable {
         this.listeSousTaches = listeSousTaches;
     }
 
-    public TacheDécomposable(Catégorie catégorie, LocalDate deadlineDate, LocalTime deadlineHeure, Priorité priorité,
+    public TacheDécomposable(Catégorie catégorie, LocalDate string, LocalTime string2, Priorité priorité,
             long durée, String nom) {
-        super(catégorie, deadlineDate, deadlineHeure, priorité, durée, nom);
+        super(catégorie, string, string2, priorité, durée, nom);
     }
 
     public void ajouterSousTache(TacheSimple tache) {

@@ -3,9 +3,9 @@ import java.io.Serializable;
 import java.time.*;
 
 public class TacheSimple extends Tache implements Serializable {
-    public TacheSimple(Catégorie catégorie, LocalDate deadlineDate, LocalTime deadlineHeure, Priorité priorité,
+    public TacheSimple(Catégorie catégorie, LocalDate localDate, LocalTime deadlineHeure, Priorité priorité,
             long durée, String nom, int période) {
-        super(catégorie, deadlineDate, deadlineHeure, priorité, durée, nom);
+        super(catégorie, localDate, deadlineHeure, priorité, durée, nom);
         this.période = période;
     }
 

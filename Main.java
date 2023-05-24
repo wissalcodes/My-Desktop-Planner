@@ -7,8 +7,11 @@ public class Main {
     public static void main(String[] args) {
         MyDesktopPlanner planner = new MyDesktopPlanner();
         planner.chargerUtilisateursFichier();
-        Utilisateur user = new Utilisateur("A");
-        planner.ajouterUtilisateur(user);
+        Utilisateur user = new Utilisateur("Wissal");
+        // planner.ajouterUtilisateur(user);
+        planner.authentification("Amina");
+        // Planification d'une tache manuelle et bloquer son créneau
+        user.planifier();
 
     }
 }

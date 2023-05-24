@@ -84,7 +84,6 @@ public class Journée implements Comparable<Journée>, Serializable {
             Scanner scanner = new Scanner(System.in);
             System.out.print("** Etat de réalisation de la tache: " + tache.getNom());
             String étatString = scanner.nextLine();
-
             EtatTache etat = EtatTache.valueOf(étatString);
             if (etat == EtatTache.COMPLETED) {
                 nbTachesRéalisées++;
